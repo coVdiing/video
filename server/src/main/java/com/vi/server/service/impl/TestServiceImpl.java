@@ -1,8 +1,8 @@
 package com.vi.server.service.impl;
 
-import com.vi.system.domain.Test;
-import com.vi.system.mapper.TestMapper;
-import com.vi.system.service.TestService;
+import com.vi.server.domain.Test;
+import com.vi.server.mapper.TestMapper;
+import com.vi.server.service.TestService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

@@ -1,6 +1,6 @@
 package com.vi.server.service;
 
-import com.vi.system.domain.Test;
+import com.vi.server.domain.Test;
 
 import java.util.List;
 

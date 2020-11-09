@@ -1,6 +1,6 @@
 package com.vi.server.mapper;
 
-import com.vi.system.domain.Test;
+import com.vi.server.domain.Test;
 
 import java.util.List;
 
