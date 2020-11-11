@@ -20,6 +20,7 @@
         <module>eureka</module>
         <module>system</module>
         <module>gateway</module>
+        <module>server</module>
     </modules>
 
 
@@ -59,6 +60,11 @@
                 <version>5.1.37</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.vi</groupId>
+                <artifactId>server</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -67,6 +73,24 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <!-- mybatis generator-->
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>1.3.7</version>
+                <configuration>
+                    <configurationFile>src/main/resources/generator/generatorConfig.xml</configurationFile>
+                    <overwrite>true</overwrite>
+                    <verbose>true</verbose>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>5.1.37</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

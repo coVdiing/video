@@ -1,7 +1,9 @@
 package com.vi.system.controller;
 
-import com.vi.system.domain.Test;
-import com.vi.system.service.TestService;
+import com.vi.server.domain.Test;
+import com.vi.server.service.TestService;
+import com.vi.server.service.impl.TestServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
