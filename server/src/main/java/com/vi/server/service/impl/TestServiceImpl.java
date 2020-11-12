@@ -17,6 +17,8 @@ public class TestServiceImpl implements TestService {
     @Override
     public List<Test> list() {
         TestExample testExample = new TestExample();
+        // criteria等同于where条件
+        testExample.createCriteria().andIdEqualTo("2");
         testExample.setOrderByClause("id desc");
         return testMapper.selectByExample(testExample);
     }
