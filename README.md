@@ -13,3 +13,6 @@ springcloud在线视频
 步骤2:添加server\src\main\resources\generator\generatorConfig.xml
 步骤3:创建maven启动命令mybaits-generator:generate -e
 
+11/18
+使用ace模板创建了一个后台登录页面
+
