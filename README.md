@@ -16,3 +16,7 @@ springcloud在线视频
 11/18
 使用ace模板创建了一个后台登录页面
 
+11/19
+1.使用npm install --save vue-router下载插件
+2.把app里的登录部分的代码迁移到views下面的login.vue,注意template下只能有一个div标签！template下面不允许出现script标签
+3.使用@click在按钮上绑定登录方法，使用this.$router().push()实现跳转
