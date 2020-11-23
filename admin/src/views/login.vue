@@ -52,7 +52,8 @@
                                                     </label>
 
                                                     <button type="button"
-                                                            class="width-35 pull-right btn btn-sm btn-primary">
+                                                            class="width-35 pull-right btn btn-sm btn-primary"
+                                                            @click="login()">
                                                         <i class="ace-icon fa fa-key"></i>
                                                         <span class="bigger-110">登录</span>
                                                     </button>
@@ -82,9 +83,17 @@
     </div><!-- /.main-container -->
 </template>
 <script>
-    $('body').attr('class', 'login-layout light-login');
     export default {
         name: 'app',
+        mounted() {
+            $('body').removeClass('no-skin');
+            $('body').attr('class', 'login-layout light-login');
+        },
+        methods:{
+            login() {
+                this.$router.push("/admin")
+            }
+        }
     }
 </script>
 
