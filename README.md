@@ -25,3 +25,7 @@ springcloud在线视频
 1.使用mouted方法修改样式问题
 2.完成admin.vue基本模板的修改
 3.创建business模块
+
+11/25
+1.创建了chapter.vue页面，对应大章列表，使用假数据填充列表
+2.使用watch监听路由变化情况，并相应的修改激活样式
