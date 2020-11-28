@@ -11,10 +11,11 @@
         </thead>
 
         <tbody>
-        <tr>
-            <td>123</td>
-            <td>test</td>
-            <td>1111</td>
+        <!--eslint-disable-next-line-->
+        <tr v-for="chapter in chapters">
+            <td>{{chapter.id}}</td>
+            <td>{{chapter.name}}</td>
+            <td>{{chapter.courseId}}</td>
             <td>
                 <div class="hidden-sm hidden-xs btn-group">
                     <button class="btn btn-xs btn-success">
@@ -68,11 +69,7 @@
                     </div>
                 </div>
             </td>
-        </tr>
-        <tr v-for="chapter in chapters">
-            <td>{{chapter.id}}</td>
-            <td>{{chapter.name}}</td>
-            <td>{{chapter.courseId}}</td>
+
         </tr>
         </tbody>
     </table>
@@ -95,7 +92,7 @@
         methods:{
             list() {
                 let _this = this;
-                _this.$ajax.get('http://127.0.0.1:9002/business/admin/chapter/list').then((response) =>{
+                _this.$ajax.get('http://127.0.0.1:9000/business/admin/chapter/list').then((response) =>{
                     console.log("查询章列表结果:", response);
                     _this.chapters = response.data;
                     }
