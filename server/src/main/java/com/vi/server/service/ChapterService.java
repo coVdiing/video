@@ -1,5 +1,6 @@
 package com.vi.server.service;
 
+import com.github.pagehelper.PageHelper;
 import com.vi.server.domain.Chapter;
 import com.vi.server.domain.ChapterExample;
 import com.vi.server.dto.ChapterDto;
@@ -17,6 +18,7 @@ public class ChapterService {
     private ChapterMapper chapterMapper;
 
     public List<ChapterDto> list() {
+        PageHelper.startPage(1, 1);
         ChapterExample chapterExample = new ChapterExample();
         // criteria等同于where条件
         chapterExample.setOrderByClause("id desc");
