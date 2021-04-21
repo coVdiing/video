@@ -7,6 +7,7 @@ import com.vi.server.domain.ChapterExample;
 import com.vi.server.dto.ChapterDto;
 import com.vi.server.dto.PageDto;
 import com.vi.server.mapper.ChapterMapper;
+import com.vi.server.util.UuidUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -36,4 +37,12 @@ public class ChapterService {
         pageDto.setTotal(pageInfo.getTotal());
         pageDto.setList(list);
     }
+
+    public void save(ChapterDto chapterDto) {
+        chapterDto.setId(UuidUtil.getShortUuid());
+        Chapter chapter = new Chapter();
+        BeanUtils.copyProperties(chapterDto,chapter);
+        chapterMapper.insert(chapter);
+    }
+
 }

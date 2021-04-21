@@ -99,7 +99,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">名称</label>
                             <div class="col-sm-10">
-                                <input class="form-control" placeholder="名称"/>
+                                <input class="form-control" v-model="chapter.name" placeholder="名称"/>
                             </div>
                         </div>
                         <br>
@@ -107,7 +107,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">课程ID</label>
                             <div class="col-sm-10">
-                                <input class="form-control" placeholder="课程ID"/>
+                                <input class="form-control" v-model="chapter.courseId" placeholder="课程ID"/>
                             </div>
                         </div>
                         <br>
@@ -115,7 +115,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary">保存</button>
+                        <button type="button" class="btn btn-primary" v-on:click="save()">保存</button>
                     </div>
                 </div>
             </div>
@@ -131,7 +131,8 @@
         name: 'chapter',
         data: function () {
             return {
-                chapters: []
+                chapters: [],
+                chapter:{}
             }
         },
         mounted() {
@@ -161,6 +162,23 @@
                         console.log("查询章列表结果:", response);
                         _this.chapters = response.data.list;
                         _this.$refs.pagination.render(page, response.data.total);
+                    }
+                )
+            },
+            /**
+             * 新增章节
+             */
+            save() {
+                console.log("新增章节")
+                let _this = this;
+                _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/save', {
+                    name: _this.chapter.name,
+                    courseId: _this.chapter.courseId,
+                }).then((response) => {
+                        console.log("保存:", response);
+                        _this.list(1)
+                        $(".modal").modal("hide");
+
                     }
                 )
             }
