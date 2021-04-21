@@ -375,7 +375,7 @@
 
                         <ul class="submenu">
                             <li class="">
-                                <a href="tables.html">
+                                <a href="#">
                                     <i class="menu-icon fa fa-caret-right"></i>
                                     用户管理
                                 </a>
@@ -386,7 +386,7 @@
 
                         <ul class="submenu">
                             <li class="">
-                                <a href="tables.html">
+                                <a href="#">
                                     <i class="menu-icon fa fa-caret-right"></i>
                                     权限管理
                                 </a>
