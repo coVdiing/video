@@ -1,6 +1,11 @@
 <template>
     <div>
         <p>
+            <button v-on:click="add()" class="btn btn-white btn-default btn-round">
+                <i class="ace-icon fa fa-edit green"></i>
+                新增
+            </button>
+            &nbsp;
             <!-- PAGE CONTENT BEGINS -->
             <button v-on:click="list()" class="btn btn-white btn-default btn-round">
                 <i class="ace-icon fa fa-times red2"></i>
@@ -83,6 +88,38 @@
         </table>
         <!--        <pagination ref="pagination" v-bind:list="list" v-bind:itemCount="8"></pagination>-->
         <pagination ref="pagination" v-bind:list="list" v-bind:itemCount="8"></pagination>
+
+        <div class="modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">新增章节</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">名称</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" placeholder="名称"/>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">课程ID</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" placeholder="课程ID"/>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -104,6 +141,14 @@
             _this.list();
         },
         methods: {
+            /**
+             * 新增
+             */
+            add() {
+                // let _this = this;\
+                console.log('新增大章列表')
+                $(".modal").modal("show");
+            },
             /**
              * 列表查询
              */
