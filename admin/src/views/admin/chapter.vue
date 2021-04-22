@@ -33,20 +33,12 @@
                 <td>{{chapter.courseId}}</td>
                 <td>
                     <div class="hidden-sm hidden-xs btn-group">
-                        <button class="btn btn-xs btn-success">
-                            <i class="ace-icon fa fa-check bigger-120"></i>
-                        </button>
-
-                        <button class="btn btn-xs btn-info">
+                        <button class="btn btn-xs btn-info" v-on:click="edit(chapter)">
                             <i class="ace-icon fa fa-pencil bigger-120"></i>
                         </button>
 
                         <button class="btn btn-xs btn-danger">
                             <i class="ace-icon fa fa-trash-o bigger-120"></i>
-                        </button>
-
-                        <button class="btn btn-xs btn-warning">
-                            <i class="ace-icon fa fa-flag bigger-120"></i>
                         </button>
                     </div>
 
@@ -151,8 +143,18 @@
             /**
              * 新增
              */
+            edit(chapter) {
+                let _this = this;
+                $(".modal").modal("show");
+                _this.chapter = $.extend({}, chapter);
+                console.log(_this.chapter)
+            },
+            /**
+             * 新增
+             */
             add() {
-                // let _this = this;\
+                let _this = this;
+                _this.chapter =  {}
                 console.log('新增大章列表')
                 $(".modal").modal("show");
             },
@@ -185,6 +187,7 @@
                 _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/save', {
                     name: _this.chapter.name,
                     courseId: _this.chapter.courseId,
+                    id: _this.chapter.id
                 }).then((response) => {
                         console.log("保存:", response);
                         _this.list(1)

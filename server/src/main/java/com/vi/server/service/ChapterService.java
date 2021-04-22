@@ -7,14 +7,18 @@ import com.vi.server.domain.ChapterExample;
 import com.vi.server.dto.ChapterDto;
 import com.vi.server.dto.PageDto;
 import com.vi.server.mapper.ChapterMapper;
+import com.vi.server.util.CopyUtil;
 import com.vi.server.util.UuidUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class ChapterService {
     @Resource
@@ -28,21 +32,28 @@ public class ChapterService {
         List<Chapter> chapterList = chapterMapper.selectByExample(chapterExample);
         List<ChapterDto> list = new ArrayList();
         PageInfo pageInfo = new PageInfo(chapterList);
-        for (int i = 0; i < chapterList.size(); i++) {
-            Chapter chapter = chapterList.get(i);
-            ChapterDto chapterDto = new ChapterDto();
-            BeanUtils.copyProperties(chapter,chapterDto);
-            list.add(chapterDto);
-        }
+        list = CopyUtil.copyList(chapterList, ChapterDto.class);
         pageDto.setTotal(pageInfo.getTotal());
         pageDto.setList(list);
     }
 
     public void save(ChapterDto chapterDto) {
-        chapterDto.setId(UuidUtil.getShortUuid());
-        Chapter chapter = new Chapter();
-        BeanUtils.copyProperties(chapterDto,chapter);
+        Chapter chapter = CopyUtil.copy(chapterDto, Chapter.class);
+        log.info("chapter:{}",chapterDto);
+        if (StringUtils.isEmpty(chapterDto.getId())) {
+            insert(chapter);
+        } else {
+            update(chapter);
+        }
+    }
+
+    private void insert(Chapter chapter) {
+        chapter.setId(UuidUtil.getShortUuid());
         chapterMapper.insert(chapter);
+    }
+
+    private void update(Chapter chapter) {
+        chapterMapper.updateByPrimaryKey(chapter);
     }
 
 }
