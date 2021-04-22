@@ -12,6 +12,9 @@
                 刷新
             </button>
         </p>
+        <div class="alert alert-warning" id="warn" role="alert" hidden="hidden">
+            A simple warning alert—check it out!
+        </div>
         <table id="simple-table" class="table  table-bordered table-hover">
             <thead>
             <tr>
@@ -104,6 +107,7 @@
                         </div>
                         <br>
                         <br>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">课程ID</label>
                             <div class="col-sm-10">
@@ -121,6 +125,8 @@
             </div>
         </div>
     </div>
+
+
 </template>
 
 <script>
@@ -160,8 +166,8 @@
                     pageSize: _this.$refs.pagination.size,
                 }).then((response) => {
                         console.log("查询章列表结果:", response);
-                        _this.chapters = response.data.list;
-                        _this.$refs.pagination.render(page, response.data.total);
+                        _this.chapters = response.data.content.list;
+                        _this.$refs.pagination.render(page, response.data.content.total);
                     }
                 )
             },
@@ -171,6 +177,11 @@
             save() {
                 console.log("新增章节")
                 let _this = this;
+                console.log("name:" + _this.chapter.name+",id:"+_this.chapter.courseId);
+                if (_this.chapter.name == undefined || _this.chapter.courseId == undefined) {
+                    alert("不能为空!")
+                    return;
+                }
                 _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/save', {
                     name: _this.chapter.name,
                     courseId: _this.chapter.courseId,
@@ -180,7 +191,7 @@
                         $(".modal").modal("hide");
 
                     }
-                )
+                );
             }
         }
     }
