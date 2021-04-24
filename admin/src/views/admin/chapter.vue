@@ -123,6 +123,9 @@
 
 <script>
     import Pagination from '../../components/pagination';
+    import Swal from 'sweetalert2';
+    import {alertSuccess,alertError,alertWarn} from '../../../public/static/js/toast.js';
+
 
     export default {
         components: {Pagination},
@@ -140,16 +143,32 @@
             _this.list();
         },
         methods: {
+
             /**
              * 删除
              */
             del(id) {
                 let _this = this;
-                _this.$ajax.delete('http://127.0.0.1:9000/business/admin/chapter/delete/' + id).then((response) => {
-                        console.log("删除结果:", response);
-                        _this.list(1);
+                Swal.fire({
+                    title: '确认删除',
+                    text: "操作不可恢复",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '确认删除',
+                    cancelButtonText: '取消'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        _this.$ajax.delete('http://127.0.0.1:9000/business/admin/chapter/delete/' + id).then((response) => {
+                                console.log("删除结果:", response);
+                                _this.list(1);
+                            }
+                        )
+                        alertSuccess("已删除");
                     }
-                )
+                })
+
             },
             /**
              * 编辑
@@ -192,7 +211,10 @@
                 let _this = this;
                 console.log("name:" + _this.chapter.name + ",id:" + _this.chapter.courseId);
                 if (_this.chapter.name == undefined || _this.chapter.courseId == undefined) {
-                    alert("不能为空!")
+                    Swal.fire('输入内容不能为空');
+                    return;
+                } else if (_this.trim(_this.chapter.name) == '' || _this.trim(_this.chapter.courseId) == '') {
+                    Swal.fire('输入内容不能为空');
                     return;
                 }
                 _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/save', {
@@ -200,11 +222,21 @@
                     courseId: _this.chapter.courseId,
                     id: _this.chapter.id
                 }).then((response) => {
-                        console.log("保存:", response);
-                        _this.list(1)
+                        if (response.status == 200) {
+                            alertSuccess("保存成功");
+                        }
                         $(".modal").modal("hide");
+                        _this.list(1);
                     }
                 );
+            },
+            /**
+             * 去除字符串两边的空格
+             * @param str
+             * @returns {*}
+             */
+            trim(str) {
+                return str.replace(/(^\s*)|(\s*$)/g, "");
             }
         }
     }
