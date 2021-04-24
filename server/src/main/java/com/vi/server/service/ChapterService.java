@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -28,7 +29,7 @@ public class ChapterService {
         PageHelper.startPage(pageDto.getPage(), pageDto.getPageSize());
         ChapterExample chapterExample = new ChapterExample();
         // criteria等同于where条件
-        chapterExample.setOrderByClause("id desc");
+        chapterExample.setOrderByClause("gmt_create desc");
         List<Chapter> chapterList = chapterMapper.selectByExample(chapterExample);
         List<ChapterDto> list = new ArrayList();
         PageInfo pageInfo = new PageInfo(chapterList);
@@ -49,11 +50,13 @@ public class ChapterService {
 
     private void insert(Chapter chapter) {
         chapter.setId(UuidUtil.getShortUuid());
+        chapter.setGmtCreate(new Date());
         chapterMapper.insert(chapter);
     }
 
     private void update(Chapter chapter) {
-        chapterMapper.updateByPrimaryKey(chapter);
+        chapter.setGmtModified(new Date());
+        chapterMapper.updateByPrimaryKeySelective(chapter);
     }
 
     public void delete(String id) {
