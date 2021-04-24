@@ -37,7 +37,7 @@
                             <i class="ace-icon fa fa-pencil bigger-120"></i>
                         </button>
 
-                        <button class="btn btn-xs btn-danger">
+                        <button class="btn btn-xs btn-danger" v-on:click="del(chapter.id)">
                             <i class="ace-icon fa fa-trash-o bigger-120"></i>
                         </button>
                     </div>
@@ -130,7 +130,7 @@
         data: function () {
             return {
                 chapters: [],
-                chapter:{}
+                chapter: {}
             }
         },
         mounted() {
@@ -141,7 +141,18 @@
         },
         methods: {
             /**
-             * 新增
+             * 删除
+             */
+            del(id) {
+                let _this = this;
+                _this.$ajax.delete('http://127.0.0.1:9000/business/admin/chapter/delete/' + id).then((response) => {
+                        console.log("删除结果:", response);
+                        _this.list(1);
+                    }
+                )
+            },
+            /**
+             * 编辑
              */
             edit(chapter) {
                 let _this = this;
@@ -154,7 +165,7 @@
              */
             add() {
                 let _this = this;
-                _this.chapter =  {}
+                _this.chapter = {}
                 console.log('新增大章列表')
                 $(".modal").modal("show");
             },
@@ -179,7 +190,7 @@
             save() {
                 console.log("新增章节")
                 let _this = this;
-                console.log("name:" + _this.chapter.name+",id:"+_this.chapter.courseId);
+                console.log("name:" + _this.chapter.name + ",id:" + _this.chapter.courseId);
                 if (_this.chapter.name == undefined || _this.chapter.courseId == undefined) {
                     alert("不能为空!")
                     return;
@@ -192,7 +203,6 @@
                         console.log("保存:", response);
                         _this.list(1)
                         $(".modal").modal("hide");
-
                     }
                 );
             }

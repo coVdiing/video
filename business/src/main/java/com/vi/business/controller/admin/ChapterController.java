@@ -8,10 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -40,6 +37,15 @@ public class ChapterController {
             @ApiParam(value="章节",required = true)
             @RequestBody ChapterDto chapterDto) {
         chapterService.save(chapterDto);
+        return ResponseDto.ok();
+    }
+
+    @ApiOperation("删除章节")
+    @DeleteMapping("/delete/{id}")
+    public ResponseDto delete(
+            @ApiParam(value="章节",required = true)
+            @PathVariable String id) {
+        chapterService.delete(id);
         return ResponseDto.ok();
     }
 
