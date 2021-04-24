@@ -128,8 +128,7 @@
     .pagination {
         vertical-align: middle !important;
         font-size: 16px;
-        margin-top: 0;
-        margin-bottom: 10px;
+        margin: 0 10px;
     }
 
     .pagination button {

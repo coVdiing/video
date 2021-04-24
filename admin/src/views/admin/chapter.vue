@@ -124,7 +124,8 @@
 <script>
     import Pagination from '../../components/pagination';
     import Swal from 'sweetalert2';
-    import {alertSuccess,alertError,alertWarn} from '../../../public/static/js/toast.js';
+    import {alertSuccess, alertError, alertWarn} from '../../../public/static/js/toast.js';
+    import {showConfirm} from '../../../public/static/js/confirm.js';
 
 
     export default {
@@ -143,32 +144,19 @@
             _this.list();
         },
         methods: {
-
             /**
              * 删除
              */
             del(id) {
                 let _this = this;
-                Swal.fire({
-                    title: '确认删除',
-                    text: "操作不可恢复",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: '确认删除',
-                    cancelButtonText: '取消'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        _this.$ajax.delete('http://127.0.0.1:9000/business/admin/chapter/delete/' + id).then((response) => {
-                                console.log("删除结果:", response);
-                                _this.list(1);
-                            }
-                        )
-                        alertSuccess("已删除");
-                    }
-                })
-
+                showConfirm("删除大章列表，操作不可恢复", function () {
+                    _this.$ajax.delete('http://127.0.0.1:9000/business/admin/chapter/delete/' + id).then((response) => {
+                            console.log("删除结果:", response);
+                            _this.list(1);
+                        }
+                    )
+                    alertSuccess("已删除");
+                });
             },
             /**
              * 编辑
@@ -193,10 +181,12 @@
              */
             list(page) {
                 let _this = this;
+                Loading.show();
                 _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/list', {
                     page: page,
                     pageSize: _this.$refs.pagination.size,
                 }).then((response) => {
+                        Loading.hide();
                         console.log("查询章列表结果:", response);
                         _this.chapters = response.data.content.list;
                         _this.$refs.pagination.render(page, response.data.content.total);
@@ -211,10 +201,10 @@
                 let _this = this;
                 console.log("name:" + _this.chapter.name + ",id:" + _this.chapter.courseId);
                 if (_this.chapter.name == undefined || _this.chapter.courseId == undefined) {
-                    Swal.fire('输入内容不能为空');
+                    alertWarn("输入内容不能为空")
                     return;
                 } else if (_this.trim(_this.chapter.name) == '' || _this.trim(_this.chapter.courseId) == '') {
-                    Swal.fire('输入内容不能为空');
+                    alertWarn("输入内容不能为空")
                     return;
                 }
                 _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/save', {
