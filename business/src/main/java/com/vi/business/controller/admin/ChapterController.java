@@ -12,13 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @Api(tags = "大章管理")
 @RestController
 @RequestMapping("/admin/chapter")
 @Slf4j
 public class ChapterController {
+    public static final String BUSINESS_NAME = "大章";
+
     @Resource
     private ChapterService chapterService;
 
