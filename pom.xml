@@ -22,6 +22,7 @@
         <module>gateway</module>
         <module>server</module>
         <module>business</module>
+        <module>generator</module>
     </modules>
 
 
@@ -31,6 +32,7 @@
         <spring-boot.version>2.2.2.RELEASE</spring-boot.version>
         <swagger.version>2.7.0</swagger.version>
         <fastjson.version>1.2.60</fastjson.version>
+        <freemarker.version>2.3.29</freemarker.version>
     </properties>
 
     <dependencyManagement>
@@ -109,6 +111,13 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
+            </dependency>
+
+            <!-- freemaker -->
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>${freemarker.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
