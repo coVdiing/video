@@ -123,10 +123,9 @@
 
 <script>
     import Pagination from '../../components/pagination';
-    import Swal from 'sweetalert2';
-    import {alertSuccess, alertError, alertWarn} from '../../../public/static/js/toast.js';
+    import {alertSuccess, alertWarn} from '../../../public/static/js/toast.js';
     import {showConfirm} from '../../../public/static/js/confirm.js';
-
+    import {require, length} from "../../../public/static/js/validator";
 
     export default {
         components: {Pagination},
@@ -200,23 +199,32 @@
                 console.log("新增章节")
                 let _this = this;
                 console.log("name:" + _this.chapter.name + ",id:" + _this.chapter.courseId);
-                if (_this.chapter.name == undefined || _this.chapter.courseId == undefined) {
-                    alertWarn("输入内容不能为空")
-                    return;
-                } else if (_this.trim(_this.chapter.name) == '' || _this.trim(_this.chapter.courseId) == '') {
-                    alertWarn("输入内容不能为空")
+                if (!require(_this.chapter.name, "章节名") ||
+                    !require(_this.chapter.courseId, "章节id") ||
+                    !length(_this.chapter.name, "章节名", 2, 18) ||
+                    !length(_this.chapter.courseId, "章节id", 2, 18)) {
                     return;
                 }
+
+                // if (_this.chapter.name == undefined || _this.chapter.courseId == undefined) {
+                //     alertWarn("输入内容不能为空")
+                //     return;
+                // } else if (_this.trim(_this.chapter.name) == '' || _this.trim(_this.chapter.courseId) == '') {
+                //     alertWarn("输入内容不能为空")
+                //     return;
+                // }
                 _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/save', {
                     name: _this.chapter.name,
                     courseId: _this.chapter.courseId,
                     id: _this.chapter.id
                 }).then((response) => {
-                        if (response.status == 200) {
+                        if (response.data.success) {
                             alertSuccess("保存成功");
+                            $(".modal").modal("hide");
+                            _this.list(1);
+                        } else {
+                            alertWarn(response.data.message);
                         }
-                        $(".modal").modal("hide");
-                        _this.list(1);
                     }
                 );
             },
