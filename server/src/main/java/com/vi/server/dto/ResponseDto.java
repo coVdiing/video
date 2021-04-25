@@ -28,6 +28,17 @@ public class ResponseDto<T> {
         responseDto.setMessage("ok");
         return responseDto;
     }
+    public static ResponseDto error() {
+        ResponseDto resp = new ResponseDto();
+        resp.setCode("500");
+        resp.setSuccess(false);
+        return resp;
+    }
+
+    public ResponseDto message(String message) {
+        this.message = message;
+        return this;
+    }
 
     public ResponseDto data(T t) {
         this.setContent(t);

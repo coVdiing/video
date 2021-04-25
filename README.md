@@ -57,3 +57,12 @@ list() {
 
 ### 11/28
 1.修改跨域配置，在gateway使用CorsWebFilter解决跨域问题，如果是单个springboot应用可以使用CorsConfig解决跨域问题
+
+### 04/24
+1.实现删除功能
+2.使用sweetalert2封装消息提示框，在删除，新增，编辑时进行提示
+3.Chapter实体类新增gmt_created,gmt_modified字段，查询按照创建时间倒序
+
+### 04/25
+1.新增ValidateUtil（后端校验参数格式）,ValidateException和全局异常处理类ControllerExceptionHandler,对异常进行统一处理
+2.前段校验参数格式

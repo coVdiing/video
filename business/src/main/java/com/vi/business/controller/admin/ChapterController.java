@@ -4,6 +4,7 @@ import com.vi.server.dto.ChapterDto;
 import com.vi.server.dto.PageDto;
 import com.vi.server.dto.ResponseDto;
 import com.vi.server.service.ChapterService;
+import com.vi.server.util.ValidateUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -36,6 +37,10 @@ public class ChapterController {
     public ResponseDto save(
             @ApiParam(value="章节",required = true)
             @RequestBody ChapterDto chapterDto) {
+        ValidateUtil.isEmpty(chapterDto.getName(),"章节名");
+        ValidateUtil.validateLength(chapterDto.getName(),"章节名",2,18);
+        ValidateUtil.isEmpty(chapterDto.getCourseId(),"课程id");
+        ValidateUtil.validateLength(chapterDto.getName(),"课程id",2,18);
         chapterService.save(chapterDto);
         return ResponseDto.ok();
     }
