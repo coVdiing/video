@@ -66,3 +66,6 @@ list() {
 ### 04/25
 1.新增ValidateUtil（后端校验参数格式）,ValidateException和全局异常处理类ControllerExceptionHandler,对异常进行统一处理
 2.前段校验参数格式
+3.新增section表和对应的类
+4.代码生成器实现，用于生成service,controller的代码
+5.
