@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
-@Api(tags = "大章管理")
+@Api(tags = "小节管理")
 @RestController
 @RequestMapping("/admin/section")
 @Slf4j
@@ -23,7 +23,7 @@ public class SectionController {
     @Resource
     private SectionService sectionService;
 
-    @ApiOperation("大章列表")
+    @ApiOperation("小节列表")
     @PostMapping("/list")
     public ResponseDto<PageDto> list(
             @ApiParam(value="分页参数",required = true)
@@ -33,19 +33,19 @@ public class SectionController {
         return data;
     }
 
-    @ApiOperation("保存章节")
+    @ApiOperation("保存小节")
     @PostMapping("/save")
     public ResponseDto save(
-            @ApiParam(value="章节",required = true)
+            @ApiParam(value="小节",required = true)
             @RequestBody SectionDto sectionDto) {
         sectionService.save(sectionDto);
         return ResponseDto.ok();
     }
 
-    @ApiOperation("删除章节")
+    @ApiOperation("删除小节")
     @DeleteMapping("/delete/{id}")
     public ResponseDto delete(
-            @ApiParam(value="章节",required = true)
+            @ApiParam(value="小节id",required = true)
             @PathVariable String id) {
         sectionService.delete(id);
         return ResponseDto.ok();

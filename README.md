@@ -68,4 +68,4 @@ list() {
 2.前段校验参数格式
 3.新增section表和对应的类
 4.代码生成器实现，用于生成service,controller的代码
-5.
+5.通过代码生成器生成Section的service和controller

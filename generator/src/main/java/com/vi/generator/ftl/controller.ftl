@@ -13,17 +13,17 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
-@Api(tags = "大章管理")
+@Api(tags = "${tableNameCn}管理")
 @RestController
 @RequestMapping("/admin/${domain}")
 @Slf4j
 public class ${Domain}Controller {
-    public static final String BUSINESS_NAME = "大章";
+    public static final String BUSINESS_NAME = "${tableNameCn}";
 
     @Resource
     private ${Domain}Service ${domain}Service;
 
-    @ApiOperation("大章列表")
+    @ApiOperation("${tableNameCn}列表")
     @PostMapping("/list")
     public ResponseDto<PageDto> list(
             @ApiParam(value="分页参数",required = true)
@@ -33,19 +33,19 @@ public class ${Domain}Controller {
         return data;
     }
 
-    @ApiOperation("保存章节")
+    @ApiOperation("保存${tableNameCn}")
     @PostMapping("/save")
     public ResponseDto save(
-            @ApiParam(value="章节",required = true)
+            @ApiParam(value="${tableNameCn}",required = true)
             @RequestBody ${Domain}Dto ${domain}Dto) {
         ${domain}Service.save(${domain}Dto);
         return ResponseDto.ok();
     }
 
-    @ApiOperation("删除章节")
+    @ApiOperation("删除${tableNameCn}")
     @DeleteMapping("/delete/{id}")
     public ResponseDto delete(
-            @ApiParam(value="章节",required = true)
+            @ApiParam(value="${tableNameCn}id",required = true)
             @PathVariable String id) {
         ${domain}Service.delete(id);
         return ResponseDto.ok();
