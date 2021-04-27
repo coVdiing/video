@@ -64,8 +64,11 @@ list() {
 3.Chapter实体类新增gmt_created,gmt_modified字段，查询按照创建时间倒序
 
 ### 04/25
-1.新增ValidateUtil（后端校验参数格式）,ValidateException和全局异常处理类ControllerExceptionHandler,对异常进行统一处理
-2.前段校验参数格式
-3.新增section表和对应的类
-4.代码生成器实现，用于生成service,controller的代码
-5.通过代码生成器生成Section的service和controller
+1.新增ValidateUtil（后端校验参数格式）,ValidateException和全局异常处理类ControllerExceptionHandler,对异常进行统一处理\n
+2.前段校验参数格式\n
+3.新增section表和对应的类\n
+4.代码生成器实现，用于生成service,controller的代码\n
+5.通过代码生成器生成Section的service和controller\n
+
+### 04/26
+1.新增DTO代码生成器的工具类
