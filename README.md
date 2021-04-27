@@ -8,18 +8,18 @@ springcloud在线视频
 创建server模块
 
 ### 11/11
-1.集成mybatis-generator插件
-步骤1:添加idea插件
-步骤2:添加server\src\main\resources\generator\generatorConfig.xml
-步骤3:创建maven启动命令mybaits-generator:generate -e
+1.集成mybatis-generator插件  
+步骤1:添加idea插件  
+步骤2:添加server\src\main\resources\generator\generatorConfig.xml  
+步骤3:创建maven启动命令mybaits-generator:generate -e  
 
 ### 11/18
 使用ace模板创建了一个后台登录页面
 
 ### 11/19
-1.使用npm install --save vue-router下载插件
-2.把app里的登录部分的代码迁移到views下面的login.vue,注意template下只能有一个div标签！template下面不允许出现script标签
-3.使用@click在按钮上绑定登录方法，使用this.$router().push()实现跳转
+1.使用npm install --save vue-router下载插件  
+2.把app里的登录部分的代码迁移到views下面的login.vue,注意template下只能有一个div标签！template下面不允许出现script标签  
+3.使用@click在按钮上绑定登录方法，使用this.$router().push()实现跳转  
 
 ### 11/23
 1.使用mouted方法修改样式问题
@@ -59,9 +59,9 @@ list() {
 1.修改跨域配置，在gateway使用CorsWebFilter解决跨域问题，如果是单个springboot应用可以使用CorsConfig解决跨域问题
 
 ### 04/24
-1.实现删除功能
-2.使用sweetalert2封装消息提示框，在删除，新增，编辑时进行提示
-3.Chapter实体类新增gmt_created,gmt_modified字段，查询按照创建时间倒序
+1.实现删除功能  
+2.使用sweetalert2封装消息提示框，在删除，新增，编辑时进行提示  
+3.Chapter实体类新增gmt_created,gmt_modified字段，查询按照创建时间倒序  
 
 ### 04/25
 1.新增ValidateUtil（后端校验参数格式）,ValidateException和全局异常处理类ControllerExceptionHandler,对异常进行统一处理  
