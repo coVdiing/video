@@ -10,6 +10,13 @@ import java.util.regex.Pattern;
  * 数据库工具类
  */
 public class DbUtil {
+    private final static String TYPE_CHAR = "char";
+    private final static String TYPE_VARCHAR = "varchar";
+    private final static String TYPE_TEXT = "text";
+    private final static String TYPE_DATETIME = "datetime";
+    private final static String TYPE_INT = "int";
+    private final static String TYPE_BIG_DECIMAL = "decimal";
+    private final static String TYPE_LONG = "long";
 
     public static Connection getConnection() {
         Connection conn = null;
@@ -31,27 +38,27 @@ public class DbUtil {
         Connection conn = getConnection();
         String sql = "SELECT table_comment FROM information_schema.tables WHERE table_name = ?";
         PreparedStatement stmt = conn.prepareStatement(sql);
-        String tableNameCH = "";
+        String tableNameCn = "";
         stmt.setString(1, tableName);
         ResultSet rs = stmt.executeQuery();
         if (rs != null) {
             while (rs.next()) {
-                tableNameCH = rs.getString(1);
+                tableNameCn = rs.getString(1);
                 break;
             }
         }
         rs.close();
         stmt.close();
         conn.close();
-        System.out.println("表名: " + tableNameCH);
-        return tableNameCH;
+        System.out.println("表名: " + tableNameCn);
+        return tableNameCn;
     }
 
     public static List<Field> getColumnByTableName(String tableName) throws Exception {
         List<Field> fieldList = new ArrayList<>();
         Connection conn = getConnection();
         Statement stmt = conn.createStatement();
-        String sql = "SHOW FULL COLUMNS FROM "+tableName;
+        String sql = "SHOW FULL COLUMNS FROM " + tableName;
         ResultSet rs = stmt.executeQuery(sql);
         if (rs != null) {
             while (rs.next()) {
@@ -76,12 +83,31 @@ public class DbUtil {
         return fieldList;
     }
 
+    /**
+     * 数据库类型转成Java类型
+     *
+     * @param type
+     * @return
+     */
     private static String sqlTypeToJavaType(String type) {
-        return null;
+        String sqlType = type.toLowerCase();
+        if (sqlType.contains(TYPE_VARCHAR) || sqlType.contains(TYPE_CHAR) || sqlType.contains(TYPE_TEXT)) {
+            return "String";
+        } else if (sqlType.contains(TYPE_DATETIME)) {
+            return "Date";
+        } else if (sqlType.contains(TYPE_INT)) {
+            return "Integer";
+        } else if (sqlType.contains(TYPE_LONG)) {
+            return "Long";
+        } else if (sqlType.contains(TYPE_BIG_DECIMAL)) {
+            return "BigDecimal";
+        } else {
+            return "String";
+        }
     }
 
     /**
-     * 下划线转大驼峰
+     * 转大驼峰
      *
      * @param columnName
      * @return
@@ -99,7 +125,10 @@ public class DbUtil {
             suffix = suffix.replace(suf, upperSuf.toCharArray()[0]);
             return prefix + suffix;
         } else {
-            return columnName;
+            char firstChar = columnName.charAt(0);
+            String upperFirstChar = String.valueOf(firstChar).toUpperCase();
+            String upperColumnName = columnName.replace(firstChar, upperFirstChar.toCharArray()[0]);
+            return upperColumnName;
         }
     }
 
