@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 </#if>
 </#list>
 
-public class ${Domain}Dto {
+public class ${Domain}Dto implements Serializable{
 
     <#list fieldList as field>
     /**
