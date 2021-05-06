@@ -81,7 +81,7 @@
             </tr>
             </tbody>
         </table>
-        <!--        <pagination ref="pagination" v-bind:list="list" v-bind:itemCount="8"></pagination>-->
+
         <pagination ref="pagination" v-bind:list="list" v-bind:itemCount="8"></pagination>
 
         <div class="modal" tabindex="-1">
@@ -206,13 +206,6 @@
                     return;
                 }
 
-                // if (_this.chapter.name == undefined || _this.chapter.courseId == undefined) {
-                //     alertWarn("输入内容不能为空")
-                //     return;
-                // } else if (_this.trim(_this.chapter.name) == '' || _this.trim(_this.chapter.courseId) == '') {
-                //     alertWarn("输入内容不能为空")
-                //     return;
-                // }
                 _this.$ajax.post(process.env.VUE_APP_SERVER+'/business/admin/chapter/save', {
                     name: _this.chapter.name,
                     courseId: _this.chapter.courseId,
