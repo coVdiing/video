@@ -280,7 +280,16 @@
                 let _this = this;
                 console.log("name:" + _this.section.name + ",id:" + _this.section.courseId);
                 //保存校验 TO DO
-                console.log("section参数:" + _this.section.title);
+                    if (!require(_this.section.title, '标题')){
+                        return;
+                    }
+                    if (!length(_this.section.title, '标题',1,50)) {
+                        return;
+                    }
+                    if (!length(_this.section.video, '视频',1,200)) {
+                        return;
+                    }
+
                 _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/section/save', {
                     id: _this.section.id,
                     title: _this.section.title,

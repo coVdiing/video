@@ -196,6 +196,18 @@
                 let _this = this;
                 console.log("name:" + _this.${domain}.name + ",id:" + _this.${domain}.courseId);
                 //保存校验 TO DO
+                <#list fieldList as field>
+                    <#if !field.nullAble>
+                    if (!require(_this.${domain}.${field.nameHump}, '${field.nameCn}')){
+                        return;
+                    }
+                    </#if>
+                    <#if (field.length > 0)>
+                    if (!length(_this.${domain}.${field.nameHump}, '${field.nameCn}',1,${field.length})) {
+                        return;
+                    }
+                    </#if>
+                </#list>
 
                 _this.$ajax.post(process.env.VUE_APP_SERVER + '/${module}/admin/${domain}/save', {
                     <#list fieldList as field>

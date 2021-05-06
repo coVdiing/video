@@ -65,6 +65,7 @@ public class DbUtil {
                 String columnName = rs.getString("Field");
                 String type = rs.getString("Type");
                 String comment = rs.getString("Comment");
+                String nullAble = rs.getString("Null");
                 Field field = new Field();
                 field.setName(columnName);
                 field.setNameHump(lineToHump(columnName));
@@ -72,6 +73,16 @@ public class DbUtil {
                 field.setType(type);
                 field.setJavaType(DbUtil.sqlTypeToJavaType(type));
                 field.setComment(comment);
+                field.setNullAble("YES".equals(nullAble.toUpperCase()));
+
+                if (type.toLowerCase().contains(TYPE_VARCHAR)) {
+                    // 如果是varchar类型就需要设置length
+                    String lengthVal = type.substring(type.indexOf("(") + 1, type.length() - 1);
+                    field.setLength(Integer.valueOf(lengthVal));
+                } else {
+                    field.setLength(0);
+                }
+
                 if (comment.contains("|")) {
                     field.setNameCn(comment.substring(0, comment.indexOf("|")));
                 } else {
@@ -117,18 +128,13 @@ public class DbUtil {
         if (columnNames.length > 1) {
             String prefix = columnNames[0];
             String suffix = columnNames[1];
-            char pre = prefix.charAt(0);
-            char suf = suffix.charAt(0);
-            String upperPre = String.valueOf(pre).toUpperCase();
-            String upperSuf = String.valueOf(suf).toUpperCase();
-            prefix = prefix.replace(pre, upperPre.toCharArray()[0]);
-            suffix = suffix.replace(suf, upperSuf.toCharArray()[0]);
+            String upperPre = prefix.substring(0,1).toUpperCase();
+            String upperSuf = suffix.substring(0,1).toUpperCase();
+            prefix = upperPre + prefix.substring(1);
+            suffix = upperSuf + suffix.substring(1);
             return prefix + suffix;
         } else {
-            char firstChar = columnName.charAt(0);
-            String upperFirstChar = String.valueOf(firstChar).toUpperCase();
-            String upperColumnName = columnName.replace(firstChar, upperFirstChar.toCharArray()[0]);
-            return upperColumnName;
+            return columnName.substring(0,1).toUpperCase()+columnName.substring(1);
         }
     }
 
@@ -154,7 +160,7 @@ public class DbUtil {
 
     public static void main(String[] args) throws Exception {
         System.out.println(lineToHump("course_id"));
-        System.out.println(lineToBigHump("course_id"));
-        System.out.println(getColumnByTableName("section"));
+        System.out.println(lineToBigHump("title"));
+//        System.out.println(getColumnByTableName("section"));
     }
 }

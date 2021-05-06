@@ -32,6 +32,14 @@ public class Field {
      * 注释
      */
     private String comment;
+    /**
+     * 字段是否可为空
+     */
+    private Boolean nullAble;
+    /**
+     * 字段长度
+     */
+    private Integer length;
 
     public String getName() {
         return name;
@@ -89,6 +97,22 @@ public class Field {
         this.comment = comment;
     }
 
+    public Boolean getNullAble() {
+        return nullAble;
+    }
+
+    public void setNullAble(Boolean nullAble) {
+        this.nullAble = nullAble;
+    }
+
+    public Integer getLength() {
+        return length;
+    }
+
+    public void setLength(Integer length) {
+        this.length = length;
+    }
+
     @Override
     public String toString() {
         return "Field{" +
@@ -99,6 +123,8 @@ public class Field {
                 ", type='" + type + '\'' +
                 ", javaType='" + javaType + '\'' +
                 ", comment='" + comment + '\'' +
+                ", nullAble=" + nullAble +
+                ", length=" + length +
                 '}';
     }
 }

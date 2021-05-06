@@ -10,10 +10,7 @@ function require(value, text) {
 }
 
 function length(value, text, min, max) {
-    if (Tool.isEmpty(value)) {
-        return true;
-    }
-    if (!Tool.isLength(value, min, max)) {
+    if (Tool.isEmpty(value) || !Tool.isLength(value, min, max)) {
         alertWarn(text + "长度" + min + "~" + max + "位");
         return false;
     } else {

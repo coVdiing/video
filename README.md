@@ -72,3 +72,8 @@ list() {
 
 ### 04/26
 1.新增DTO代码生成器的工具类
+
+### 05/06  
+1.删除chapter.vue中多余的注释
+2.前端vue生成器开发，生成section对应的vue.js代码  
+3.前端参数传入时丢失title，修改SectionDto让参数能正常序列化  

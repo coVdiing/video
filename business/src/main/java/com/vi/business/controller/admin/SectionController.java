@@ -38,6 +38,10 @@ public class SectionController {
     public ResponseDto save(
             @ApiParam(value="小节",required = true)
             @RequestBody SectionDto sectionDto) {
+        // 保存校验                      getTitle
+        ValidateUtil.isEmpty(sectionDto.getTitle(),"标题");
+        ValidateUtil.validateLength(sectionDto.getTitle(),"标题",1,50);
+        ValidateUtil.validateLength(sectionDto.getVideo(),"视频",1,200);
         sectionService.save(sectionDto);
         return ResponseDto.ok();
     }

@@ -38,6 +38,15 @@ public class ${Domain}Controller {
     public ResponseDto save(
             @ApiParam(value="${tableNameCn}",required = true)
             @RequestBody ${Domain}Dto ${domain}Dto) {
+        // 保存校验
+        <#list fieldList as field>
+            <#if !field.nullAble>
+        ValidateUtil.isEmpty(${domain}Dto.get${field.nameBigHump}(),"${field.nameCn}");
+            </#if>
+            <#if (field.length > 0)>
+        ValidateUtil.validateLength(${domain}Dto.get${field.nameBigHump}(),"${field.nameCn}",1,${field.length});
+            </#if>
+        </#list>
         ${domain}Service.save(${domain}Dto);
         return ResponseDto.ok();
     }

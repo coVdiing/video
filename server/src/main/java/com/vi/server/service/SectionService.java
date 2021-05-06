@@ -18,9 +18,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * @author vi
- */
 @Slf4j
 @Service
 public class SectionService {
