@@ -214,7 +214,7 @@
             return {
                 sections: [],
                 section: {},
-                CHARGE:[{key:"C",value:"收费"},{key:"F",value:"免费"}],
+                CHARGE:CHARGE,
         }
         },
         mounted() {
@@ -323,9 +323,9 @@
             },
             showCharge(charge) {
                 if (charge === 'f' || charge === 'F') {
-                    return "免费";
+                    return CHARGE[0].value;
                 } else {
-                    return "收费";
+                    return CHARGE[1].value;
                 }
             }
         }
