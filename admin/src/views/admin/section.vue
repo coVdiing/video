@@ -206,6 +206,7 @@
     import {alertSuccess, alertWarn} from '../../../public/static/js/toast.js';
     import {showConfirm} from '../../../public/static/js/confirm.js';
     import {require, length} from "../../../public/static/js/validator";
+    import {showCharge} from "../../../public/static/js/common";
 
     export default {
         components: {Pagination},
@@ -322,11 +323,7 @@
                 return str.replace(/(^\s*)|(\s*$)/g, "");
             },
             showCharge(charge) {
-                if (charge === 'f' || charge === 'F') {
-                    return CHARGE[0].value;
-                } else {
-                    return CHARGE[1].value;
-                }
+               return showCharge(charge);
             }
         }
     }

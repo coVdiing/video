@@ -12,7 +12,7 @@ public class ValidateUtil {
      * @param arg
      * @param fieldName
      */
-    public static void isEmpty(String arg,String fieldName) {
+    public static void isEmpty(Object arg,String fieldName) {
         if (StringUtils.isEmpty(arg)) {
             throw new ValidateException(fieldName+"不能为空");
         }

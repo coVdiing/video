@@ -1,5 +1,6 @@
 package com.vi.server.dto;
 
+import java.io.Serializable;
 <#list typeSet as type>
 <#if type=='Date'>
 import java.util.Date;

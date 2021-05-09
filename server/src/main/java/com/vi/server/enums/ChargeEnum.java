@@ -1,13 +1,13 @@
 package com.vi.server.enums;
 
-public enum SectionChargeEnum {
+public enum ChargeEnum {
     CHARGE("C","收费"),
     FREE("F", "免费");
 
     private String code;
     private String desc;
 
-    SectionChargeEnum(String code, String desc) {
+    ChargeEnum(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }

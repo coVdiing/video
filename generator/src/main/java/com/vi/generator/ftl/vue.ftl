@@ -203,7 +203,7 @@
                     }
                     </#if>
                     <#if (field.length > 0)>
-                    if (!length(_this.${domain}.${field.nameHump}, '${field.nameCn}',1,${field.length})) {
+                    if (!length(_this.${domain}.${field.nameHump}, '${field.nameCn}',1,${field.length?c})) {
                         return;
                     }
                     </#if>

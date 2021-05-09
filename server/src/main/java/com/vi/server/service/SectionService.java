@@ -6,7 +6,7 @@ import com.vi.server.domain.Section;
 import com.vi.server.domain.SectionExample;
 import com.vi.server.dto.SectionDto;
 import com.vi.server.dto.PageDto;
-import com.vi.server.enums.SectionChargeEnum;
+import com.vi.server.enums.ChargeEnum;
 import com.vi.server.mapper.SectionMapper;
 import com.vi.server.util.CopyUtil;
 import com.vi.server.util.UuidUtil;
@@ -52,7 +52,7 @@ public class SectionService {
         section.setId(UuidUtil.getShortUuid());
         section.setGmtCreate(new Date());
         if (section.getCharge() == null) {
-            section.setCharge(SectionChargeEnum.CHARGE.getCode());
+            section.setCharge(ChargeEnum.CHARGE.getCode());
         }
         sectionMapper.insert(section);
     }

@@ -44,7 +44,7 @@ public class ${Domain}Controller {
         ValidateUtil.isEmpty(${domain}Dto.get${field.nameBigHump}(),"${field.nameCn}");
             </#if>
             <#if (field.length > 0)>
-        ValidateUtil.validateLength(${domain}Dto.get${field.nameBigHump}(),"${field.nameCn}",1,${field.length});
+        ValidateUtil.validateLength(${domain}Dto.get${field.nameBigHump}(),"${field.nameCn}",1,${field.length?c});
             </#if>
         </#list>
         ${domain}Service.save(${domain}Dto);
