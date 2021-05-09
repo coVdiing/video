@@ -41,7 +41,7 @@
                     <td>{{section.chapterId}}</td>
                     <td>{{section.video}}</td>
                     <td>{{section.time}}</td>
-                    <td>{{section.charge}}</td>
+                    <td>{{showCharge(section.charge)}}</td>
                     <td>{{section.sort}}</td>
                     <td>{{section.gmtCreate}}</td>
                     <td>{{section.gmtModified}}</td>
@@ -156,7 +156,9 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">收费</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control" v-model="section.charge" />
+                                   <select v-model="section.charge" class="form-control">
+                                       <option v-for="ele in CHARGE" v-bind:value="ele.key">{{ele.value}}</option>
+                                   </select>
                                 </div>
                             </div>
                             <br>
@@ -211,9 +213,8 @@
         data: function () {
             return {
                 sections: [],
-            section:
-            {
-            }
+                section: {},
+                CHARGE:[{key:"C",value:"收费"},{key:"F",value:"免费"}],
         }
         },
         mounted() {
@@ -319,6 +320,13 @@
              */
             trim(str) {
                 return str.replace(/(^\s*)|(\s*$)/g, "");
+            },
+            showCharge(charge) {
+                if (charge === 'f' || charge === 'F') {
+                    return "免费";
+                } else {
+                    return "收费";
+                }
             }
         }
     }

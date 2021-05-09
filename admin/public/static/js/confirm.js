@@ -1,11 +1,9 @@
 import Swal from "sweetalert2";
 
 
-function
-showConfirm(message, callback) {
+function showConfirm(message, callback) {
     Swal.fire({
-        title: '确认删除',
-        text: message,
+        title: '确认删除',        text: message,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',

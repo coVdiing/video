@@ -77,3 +77,6 @@ list() {
 1.删除chapter.vue中多余的注释
 2.前端vue生成器开发，生成section对应的vue.js代码  
 3.前端参数传入时丢失title，修改SectionDto让参数能正常序列化  
+
+### 05/09  
+1.枚举字段，表格显示中文，表单显示下拉框  
