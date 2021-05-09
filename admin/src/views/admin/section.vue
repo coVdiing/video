@@ -209,7 +209,7 @@
 
     export default {
         components: {Pagination},
-        name: 'section',
+        name: 'business-section',
         data: function () {
             return {
                 sections: [],
