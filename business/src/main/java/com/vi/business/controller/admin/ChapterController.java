@@ -1,6 +1,7 @@
 package com.vi.business.controller.admin;
 
 import com.vi.server.dto.ChapterDto;
+import com.vi.server.dto.ChapterPageDto;
 import com.vi.server.dto.PageDto;
 import com.vi.server.dto.ResponseDto;
 import com.vi.server.service.ChapterService;
@@ -27,9 +28,10 @@ public class ChapterController {
     @PostMapping("/list")
     public ResponseDto<PageDto> list(
             @ApiParam(value="分页参数",required = true)
-            @RequestBody PageDto pageDto) {
-        chapterService.list(pageDto);
-        ResponseDto data = ResponseDto.ok().data(pageDto);
+            @RequestBody ChapterPageDto chapterPageDto) {
+        ValidateUtil.isEmpty(chapterPageDto.getCourseId(),"课程名");
+        chapterService.list(chapterPageDto);
+        ResponseDto data = ResponseDto.ok().data(chapterPageDto);
         return data;
     }
 

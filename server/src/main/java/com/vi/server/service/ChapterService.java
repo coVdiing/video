@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.vi.server.domain.Chapter;
 import com.vi.server.domain.ChapterExample;
 import com.vi.server.dto.ChapterDto;
+import com.vi.server.dto.ChapterPageDto;
 import com.vi.server.dto.PageDto;
 import com.vi.server.mapper.ChapterMapper;
 import com.vi.server.util.CopyUtil;
@@ -24,17 +25,21 @@ public class ChapterService {
     @Resource
     private ChapterMapper chapterMapper;
 
-    public void list(PageDto pageDto) {
-        PageHelper.startPage(pageDto.getPage(), pageDto.getPageSize());
+    public void list(ChapterPageDto chapterPageDto) {
+        PageHelper.startPage(chapterPageDto.getPage(), chapterPageDto.getPageSize());
         ChapterExample chapterExample = new ChapterExample();
         // criteria等同于where条件
         chapterExample.setOrderByClause("gmt_create desc");
+        ChapterExample.Criteria criteria = chapterExample.createCriteria();
+        if (!StringUtils.isEmpty(chapterPageDto.getCourseId())) {
+            criteria.andCourseIdEqualTo(chapterPageDto.getCourseId());
+        }
         List<Chapter> chapterList = chapterMapper.selectByExample(chapterExample);
         List<ChapterDto> list = new ArrayList();
         PageInfo pageInfo = new PageInfo(chapterList);
         list = CopyUtil.copyList(chapterList, ChapterDto.class);
-        pageDto.setTotal(pageInfo.getTotal());
-        pageDto.setList(list);
+        chapterPageDto.setTotal(pageInfo.getTotal());
+        chapterPageDto.setList(list);
     }
 
     public void save(ChapterDto chapterDto) {

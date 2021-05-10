@@ -414,9 +414,8 @@
                                 </router-link>
                                 <b class="arrow"></b>
                             </li>
-                        </ul>
 
-                        <ul class="submenu">
+
                             <li class="active" id="business-section-sidebar">
                                 <router-link to="/business/section">
                                     <i class="menu-icon fa fa-caret-right"></i>
@@ -424,9 +423,9 @@
                                 </router-link>
                                 <b class="arrow"></b>
                             </li>
-                        </ul>
 
-                        <ul class="submenu">
+
+
                             <li class="active" id="business-course-sidebar">
                                 <router-link to="/business/course">
                                     <i class="menu-icon fa fa-caret-right"></i>
@@ -528,10 +527,11 @@
                 $("#" + id).siblings().find("li").removeClass("active");
                 $("#" + id).addClass("active");
 
-                // 如果有父菜单，父菜单的兄弟菜单去掉open active,父菜单增加open active
+                // 如果有父菜单，父菜单的兄弟菜单去掉open active，父菜单增加open active
                 let parentLi = $("#" + id).parents("li");
                 if (parentLi) {
                     parentLi.siblings().removeClass("open active");
+                    parentLi.siblings().find("li").removeClass("active");
                     parentLi.addClass("open active");
                 }
             }

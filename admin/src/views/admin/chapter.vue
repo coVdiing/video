@@ -35,7 +35,7 @@
             <tr v-for="chapter in chapters">
                 <td>{{chapter.id}}</td>
                 <td>{{chapter.name}}</td>
-                <td>{{chapter.courseId}}</td>
+                <td>{{course.name}}</td>
                 <td>
                     <div class="hidden-sm hidden-xs btn-group">
                         <button class="btn btn-xs btn-info" v-on:click="edit(chapter)">
@@ -104,15 +104,10 @@
                         </div>
                         <br>
                         <br>
-
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">课程ID</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" v-model="chapter.courseId" placeholder="课程ID"/>
-                            </div>
+                            <label class="col-sm-2 control-label">课程</label>
+                            <p class="col-sm-10">{{course.name}}</p>
                         </div>
-                        <br>
-                        <br>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
@@ -146,7 +141,7 @@
         mounted() {
             let _this = this;
             _this.$refs.pagination.size = 5;
-            // _this.$parent.activeSidebar("business-chapter-sidebar");
+            _this.$parent.activeSidebar("business-chapter-sidebar");
             _this.course = SessionStorage.get("course") || {}
             if (Tool.isEmpty(course)) {
                 _this.$router.push("/welcome");
@@ -195,6 +190,7 @@
                 _this.$ajax.post(process.env.VUE_APP_SERVER+'/business/admin/chapter/list', {
                     page: page,
                     pageSize: _this.$refs.pagination.size,
+                    courseId: _this.course.id
                 }).then((response) => {
                         Loading.hide();
                         console.log("查询章列表结果:", response);
@@ -209,14 +205,11 @@
             save() {
                 console.log("新增章节")
                 let _this = this;
-                console.log("name:" + _this.chapter.name + ",id:" + _this.chapter.courseId);
                 if (!require(_this.chapter.name, "章节名") ||
-                    !require(_this.chapter.courseId, "章节id") ||
-                    !length(_this.chapter.name, "章节名", 2, 18) ||
-                    !length(_this.chapter.courseId, "章节id", 2, 18)) {
+                    !length(_this.chapter.name, "章节名", 2, 18)) {
                     return;
                 }
-
+                _this.chapter.courseId = _this.course.id;
                 _this.$ajax.post(process.env.VUE_APP_SERVER+'/business/admin/chapter/save', {
                     name: _this.chapter.name,
                     courseId: _this.chapter.courseId,
@@ -231,14 +224,6 @@
                         }
                     }
                 );
-            },
-            /**
-             * 去除字符串两边的空格
-             * @param str
-             * @returns {*}
-             */
-            trim(str) {
-                return str.replace(/(^\s*)|(\s*$)/g, "");
             }
         }
     }
