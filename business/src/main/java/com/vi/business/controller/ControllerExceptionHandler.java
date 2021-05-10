@@ -17,4 +17,11 @@ public class ControllerExceptionHandler {
         log.warn(e.getMessage());
         return ResponseDto.error().message("请求参数有误");
     }
+
+    @ExceptionHandler(value = RuntimeException.class)
+    @ResponseBody
+    public ResponseDto validateExceptionHandler(RuntimeException e) {
+        log.warn(e.getMessage());
+        return ResponseDto.error().message(e.getMessage());
+    }
 }

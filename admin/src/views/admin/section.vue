@@ -299,6 +299,8 @@
                             _this.list(1);
                         } else {
                             alertWarn(response.data.message);
+                            $(".modal").modal("hide");
+                            _this.list(1);
                         }
                     }
                 );
