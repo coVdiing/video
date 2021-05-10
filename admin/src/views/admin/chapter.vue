@@ -11,10 +11,15 @@
                 <i class="ace-icon fa fa-times red2"></i>
                 刷新
             </button>
+            <router-link to="/business/course" class="btn btn-white btn-default btn-round">
+                <i class="ace-icon fa fa-arrow-left"></i>
+                返回课程
+            </router-link>
         </p>
         <div class="alert alert-warning" id="warn" role="alert" hidden="hidden">
             A simple warning alert—check it out!
         </div>
+        <h3>{{course.name}}</h3>
         <table id="simple-table" class="table  table-bordered table-hover">
             <thead>
             <tr>
@@ -126,6 +131,7 @@
     import {alertSuccess, alertWarn} from '../../../public/static/js/toast.js';
     import {showConfirm} from '../../../public/static/js/confirm.js';
     import {require, length} from "../../../public/static/js/validator";
+    import course from "./course";
 
     export default {
         components: {Pagination},
@@ -133,13 +139,18 @@
         data: function () {
             return {
                 chapters: [],
-                chapter: {}
+                chapter: {},
+                course:{}
             }
         },
         mounted() {
             let _this = this;
             _this.$refs.pagination.size = 5;
-            _this.$parent.activeSidebar("business-chapter-sidebar");
+            // _this.$parent.activeSidebar("business-chapter-sidebar");
+            _this.course = SessionStorage.get("course") || {}
+            if (Tool.isEmpty(course)) {
+                _this.$router.push("/welcome");
+            }
             _this.list();
         },
         methods: {
