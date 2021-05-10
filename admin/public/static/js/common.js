@@ -1,8 +1,8 @@
 function showCharge(charge) {
     if (charge === 'f' || charge === 'F') {
-        return CHARGE[0].value;
-    } else {
         return CHARGE[1].value;
+    } else {
+        return CHARGE[0].value;
     }
 }
 

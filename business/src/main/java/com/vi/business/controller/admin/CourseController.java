@@ -42,7 +42,7 @@ public class CourseController {
         ValidateUtil.isEmpty(courseDto.getName(),"名称");
         ValidateUtil.validateLength(courseDto.getName(),"名称",1,50);
         ValidateUtil.validateLength(courseDto.getSummary(),"概述",1,2000);
-        ValidateUtil.validateLength(courseDto.getImage(),"封面",1,100);
+//        ValidateUtil.validateLength(courseDto.getImage(),"封面",1,100);
         courseService.save(courseDto);
         return ResponseDto.ok();
     }
