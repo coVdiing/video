@@ -10,6 +10,7 @@ import com.vi.server.enums.ChargeEnum;
 import com.vi.server.enums.CourseLevelEnum;
 import com.vi.server.enums.CourseStatusEnum;
 import com.vi.server.mapper.CourseMapper;
+import com.vi.server.mapper.my.MyCourseMapper;
 import com.vi.server.util.CopyUtil;
 import com.vi.server.util.UuidUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,8 @@ import java.util.List;
 public class CourseService {
     @Resource
     private CourseMapper courseMapper;
+    @Resource
+    private MyCourseMapper myCourseMapper;
 
     public void list(PageDto pageDto) {
         PageHelper.startPage(pageDto.getPage(), pageDto.getPageSize());
@@ -72,5 +75,9 @@ public class CourseService {
 
     public void delete(String id) {
         courseMapper.deleteByPrimaryKey(id);
+    }
+
+    public void updateTime(String courseId) {
+        myCourseMapper.updateTime(courseId);
     }
 }
