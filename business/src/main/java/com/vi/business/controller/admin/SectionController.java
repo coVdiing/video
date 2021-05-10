@@ -3,6 +3,7 @@ package com.vi.business.controller.admin;
 import com.vi.server.dto.SectionDto;
 import com.vi.server.dto.PageDto;
 import com.vi.server.dto.ResponseDto;
+import com.vi.server.dto.SectionPageDto;
 import com.vi.server.service.SectionService;
 import com.vi.server.util.ValidateUtil;
 import io.swagger.annotations.Api;
@@ -27,9 +28,9 @@ public class SectionController {
     @PostMapping("/list")
     public ResponseDto<PageDto> list(
             @ApiParam(value="分页参数",required = true)
-            @RequestBody PageDto pageDto) {
-        sectionService.list(pageDto);
-        ResponseDto data = ResponseDto.ok().data(pageDto);
+            @RequestBody SectionPageDto sectionPageDto) {
+        sectionService.list(sectionPageDto);
+        ResponseDto data = ResponseDto.ok().data(sectionPageDto);
         return data;
     }
 

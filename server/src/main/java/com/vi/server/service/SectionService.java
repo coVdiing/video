@@ -6,6 +6,7 @@ import com.vi.server.domain.Section;
 import com.vi.server.domain.SectionExample;
 import com.vi.server.dto.SectionDto;
 import com.vi.server.dto.PageDto;
+import com.vi.server.dto.SectionPageDto;
 import com.vi.server.enums.ChargeEnum;
 import com.vi.server.mapper.SectionMapper;
 import com.vi.server.util.CopyUtil;
@@ -25,17 +26,24 @@ public class SectionService {
     @Resource
     private SectionMapper sectionMapper;
 
-    public void list(PageDto pageDto) {
-        PageHelper.startPage(pageDto.getPage(), pageDto.getPageSize());
+    public void list(SectionPageDto sectionPageDto) {
+        PageHelper.startPage(sectionPageDto.getPage(), sectionPageDto.getPageSize());
         SectionExample sectionExample = new SectionExample();
         // criteria等同于where条件
+        SectionExample.Criteria criteria = sectionExample.createCriteria();
+        if (!StringUtils.isEmpty(sectionPageDto.getChapterId())) {
+            criteria.andChapterIdEqualTo(sectionPageDto.getChapterId());
+        }
+        if (!StringUtils.isEmpty(sectionPageDto.getCourseId())) {
+            criteria.andCourseIdEqualTo(sectionPageDto.getCourseId());
+        }
         sectionExample.setOrderByClause("gmt_create desc");
         List<Section> sectionList = sectionMapper.selectByExample(sectionExample);
         List<SectionDto> list = new ArrayList();
         PageInfo pageInfo = new PageInfo(sectionList);
         list = CopyUtil.copyList(sectionList, SectionDto.class);
-        pageDto.setTotal(pageInfo.getTotal());
-        pageDto.setList(list);
+        sectionPageDto.setTotal(pageInfo.getTotal());
+        sectionPageDto.setList(list);
     }
 
     public void save(SectionDto sectionDto) {

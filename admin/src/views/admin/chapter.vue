@@ -1,5 +1,9 @@
 <template>
     <div>
+        <h4 class="lighter">
+            <router-link to="/business/course" class="pink">{{course.name}}</router-link>
+        </h4>
+        <hr>
         <p>
             <button v-on:click="add()" class="btn btn-white btn-default btn-round">
                 <i class="ace-icon fa fa-edit green"></i>
@@ -19,11 +23,9 @@
         <div class="alert alert-warning" id="warn" role="alert" hidden="hidden">
             A simple warning alert—check it out!
         </div>
-        <h3>{{course.name}}</h3>
         <table id="simple-table" class="table  table-bordered table-hover">
             <thead>
             <tr>
-                <th>ID</th>
                 <th>名称</th>
                 <th>课程</th>
                 <th>操作</th>
@@ -33,17 +35,19 @@
             <tbody>
             <!--eslint-disable-next-line-->
             <tr v-for="chapter in chapters">
-                <td>{{chapter.id}}</td>
                 <td>{{chapter.name}}</td>
                 <td>{{course.name}}</td>
                 <td>
                     <div class="hidden-sm hidden-xs btn-group">
+                        <button class="btn btn-white btn-xs btn-info" v-on:click="toSection(chapter)">
+                            小节
+                        </button>
                         <button class="btn btn-xs btn-info" v-on:click="edit(chapter)">
-                            <i class="ace-icon fa fa-pencil bigger-120"></i>
+                           编辑
                         </button>
 
                         <button class="btn btn-xs btn-danger" v-on:click="del(chapter.id)">
-                            <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                            删除
                         </button>
                     </div>
 
@@ -224,6 +228,11 @@
                         }
                     }
                 );
+            },
+            toSection(chapter) {
+                let _this = this;
+                SessionStorage.set("chapter", chapter);
+                _this.$router.push("/business/section");
             }
         }
     }

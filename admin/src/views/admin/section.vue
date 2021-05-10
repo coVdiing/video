@@ -1,5 +1,10 @@
 <template>
     <div>
+        <h4 class="lighter">
+            <router-link to="/business/course" class="pink">{{course.name}}</router-link><i class="ace-icon fa fa-angle-double-right"></i>
+            <router-link to="/business/chapter" class="pink">{{chapter.name}}</router-link>
+        </h4>
+        <hr>
         <p>
             <button v-on:click="add()" class="btn btn-white btn-default btn-round">
                 <i class="ace-icon fa fa-edit green"></i>
@@ -11,6 +16,10 @@
                 <i class="ace-icon fa fa-times red2"></i>
                 刷新
             </button>
+            <router-link to="/business/chapter" class="btn btn-white btn-default btn-round">
+                <i class="ace-icon fa fa-arrow-left"></i>
+                返回大章
+            </router-link>
         </p>
         <div class="alert alert-warning" id="warn" role="alert" hidden="hidden">
             A simple warning alert—check it out!
@@ -18,7 +27,6 @@
         <table id="simple-table" class="table  table-bordered table-hover">
             <thead>
             <tr>
-                                    <th>ID</th>
                     <th>标题</th>
                     <th>课程</th>
                     <th>大章</th>
@@ -35,10 +43,9 @@
             <tbody>
             <!--eslint-disable-next-line-->
             <tr v-for="section in sections">
-                    <td>{{section.id}}</td>
                     <td>{{section.title}}</td>
-                    <td>{{section.courseId}}</td>
-                    <td>{{section.chapterId}}</td>
+                    <td>{{course.name}}</td>
+                    <td>{{chapter.name}}</td>
                     <td>{{section.video}}</td>
                     <td>{{section.time}}</td>
                     <td>{{showCharge(section.charge)}}</td>
@@ -106,35 +113,12 @@
                     </div>
                     <div class="modal-body">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">ID</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" v-model="section.id" />
-                                </div>
-                            </div>
-                            <br>
-                            <br>
-                            <div class="form-group">
                                 <label class="col-sm-2 control-label">标题</label>
                                 <div class="col-sm-10">
                                     <input class="form-control" v-model="section.title" />
                                 </div>
                             </div>
-                            <br>
-                            <br>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">课程</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" v-model="section.courseId" />
-                                </div>
-                            </div>
-                            <br>
-                            <br>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">大章</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" v-model="section.chapterId" />
-                                </div>
-                            </div>
+
                             <br>
                             <br>
                             <div class="form-group">
@@ -216,12 +200,16 @@
                 sections: [],
                 section: {},
                 CHARGE:CHARGE,
+                chapter:{},
+                course:{}
         }
         },
         mounted() {
             let _this = this;
             _this.$refs.pagination.size = 5;
             _this.$parent.activeSidebar("business-section-sidebar");
+            _this.course = SessionStorage.get("course");
+            _this.chapter = SessionStorage.get("chapter");
             _this.list();
         },
         methods: {
@@ -266,6 +254,8 @@
                 _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/section/list', {
                     page: page,
                     pageSize: _this.$refs.pagination.size,
+                    chapterId: _this.chapter.id,
+                    courseId: _this.course.id
                 }).then((response) => {
                         Loading.hide();
                         console.log("查询章列表结果:", response);
@@ -278,9 +268,7 @@
              * 新增小节
              */
             save() {
-                console.log("新增小节")
                 let _this = this;
-                console.log("name:" + _this.section.name + ",id:" + _this.section.courseId);
                 //保存校验 TO DO
                     if (!require(_this.section.title, '标题')){
                         return;
@@ -291,7 +279,8 @@
                     if (!length(_this.section.video, '视频',1,200)) {
                         return;
                     }
-
+                _this.section.chapterId = _this.chapter.id;
+                _this.section.courseId = _this.course.id;
                 _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/section/save', {
                     id: _this.section.id,
                     title: _this.section.title,
@@ -313,14 +302,6 @@
                         }
                     }
                 );
-            },
-            /**
-             * 去除字符串两边的空格
-             * @param str
-             * @returns {*}
-             */
-            trim(str) {
-                return str.replace(/(^\s*)|(\s*$)/g, "");
             },
             showCharge(charge) {
                return showCharge(charge);
