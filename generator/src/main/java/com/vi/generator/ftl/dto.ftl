@@ -1,6 +1,5 @@
 package com.vi.server.dto;
 
-import java.io.Serializable;
 <#list typeSet as type>
 <#if type=='Date'>
 import java.util.Date;
@@ -11,7 +10,7 @@ import java.math.BigDecimal;
 </#if>
 </#list>
 
-public class ${Domain}Dto implements Serializable{
+public class ${Domain}Dto {
 
     <#list fieldList as field>
     /**
