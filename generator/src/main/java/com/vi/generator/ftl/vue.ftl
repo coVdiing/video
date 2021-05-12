@@ -223,14 +223,6 @@
                         }
                     }
                 );
-            },
-            /**
-             * 去除字符串两边的空格
-             * @param str
-             * @returns {*}
-             */
-            trim(str) {
-                return str.replace(/(^\s*)|(\s*$)/g, "");
             }
         }
     }

@@ -1,39 +1,35 @@
 package com.vi.server.service;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.vi.server.domain.Category;
 import com.vi.server.domain.CategoryExample;
 import com.vi.server.dto.CategoryDto;
-import com.vi.server.dto.PageDto;
 import com.vi.server.mapper.CategoryMapper;
 import com.vi.server.util.CopyUtil;
 import com.vi.server.util.UuidUtil;
+import com.vi.server.vo.CategoryVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Transactional
 public class CategoryService {
     @Resource
     private CategoryMapper categoryMapper;
 
-    public void list(PageDto pageDto) {
-        PageHelper.startPage(pageDto.getPage(), pageDto.getPageSize());
+    public List<CategoryVo> all() {
         CategoryExample categoryExample = new CategoryExample();
-        // criteria等同于where条件
-        List<Category> categoryList = categoryMapper.selectByExample(categoryExample);
-        List<CategoryDto> list = new ArrayList();
-        PageInfo pageInfo = new PageInfo(categoryList);
-        list = CopyUtil.copyList(categoryList, CategoryDto.class);
-        pageDto.setTotal(pageInfo.getTotal());
-        pageDto.setList(list);
+        categoryExample.setOrderByClause("sort asc");
+        List<Category> categories = categoryMapper.selectByExample(categoryExample);
+        return dto2Vo(categories);
     }
 
     public void save(CategoryDto categoryDto) {
@@ -56,6 +52,33 @@ public class CategoryService {
     }
 
     public void delete(String id) {
+        Category category = categoryMapper.selectByPrimaryKey(id);
+        // 如果删除一级分类，需要把关联的二级分类都删除
+        if ("00000000".equals(category.getParent())) {
+            CategoryExample example = new CategoryExample();
+            example.createCriteria().andParentEqualTo(id);
+            categoryMapper.deleteByExample(example);
+        }
         categoryMapper.deleteByPrimaryKey(id);
+    }
+
+    private List<CategoryVo> dto2Vo(List<Category> categories) {
+        List<Category> collect = categories.stream().filter(ele -> ("00000000".equals(ele.getParent()))).collect(Collectors.toList());
+        List<CategoryVo> result = CopyUtil.copyList(collect, CategoryVo.class);
+        HashMap<String, ArrayList<CategoryVo>> map = new HashMap<>();
+        // 遍历result，用id作为key存入hashMap
+        result.stream().forEach(ele -> map.put(ele.getId(),new ArrayList<CategoryVo>()));
+        // 遍历categories
+        categories.stream().forEach(ele -> {
+            ArrayList<CategoryVo> value = map.get(ele.getParent());
+            if ( value != null) {
+                value.add(CopyUtil.copy(ele,CategoryVo.class));
+            }
+        });
+        result.stream().forEach( ele -> {
+            ArrayList<CategoryVo> categoryVos = map.get(ele.getId());
+            ele.setChildren(categoryVos);
+        });
+        return result;
     }
 }
