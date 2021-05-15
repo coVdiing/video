@@ -71,15 +71,16 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">新增课程</h5>
+                        <h5 class="modal-title">{{title}}</h5>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
                             <el-tree
                                     :data="categories"
-                                    show-checkbox
+                                    show-checkbox="true"
                                     node-key="id"
-                                    :props="defaultProps">
+                                    :props="defaultProps"
+                                    ref="tree">
                             </el-tree>
                         </div>
 
@@ -218,11 +219,13 @@
                 CHARGE: CHARGE,
                 COURSE_LEVEL: COURSE_LEVEL,
                 COURSE_STATUS: COURSE_STATUS,
-                categories:[],
+                categories: [],
                 defaultProps: {
                     children: 'children',
                     label: 'name'
-                }
+                },
+                title: "",
+                selectedCategories: []
             }
         },
         mounted() {
@@ -261,6 +264,16 @@
                 let _this = this;
                 $(".modal").modal("show");
                 _this.course = $.extend({}, course);
+                _this.title = "编辑课程";
+                _this.getCategory();
+                _this.getSelectedCategories(course.id);
+                setTimeout(function () {
+                    console.log('edit:' + _this.selectedCategories);
+                    let arr = _this.selectedCategories;
+                    for(let i = 0; i < arr.length;i++) {
+                        _this.$refs.tree.setChecked(arr[i],true,false);
+                    }
+                }, 200);
             },
             /**
              * 新增
@@ -268,8 +281,10 @@
             add() {
                 let _this = this;
                 _this.course = {}
+                _this.$refs.tree.setCheckedNodes([]);
                 $(".modal").modal("show");
                 _this.getCategory();
+                _this.title = "新增课程";
             },
             /**
              * 列表查询
@@ -295,6 +310,9 @@
                 console.log("新增")
                 let _this = this;
                 console.log("name:" + _this.course.name + ",id:" + _this.course.courseId);
+                // 获取选择的分类
+                let categories = _this.$refs.tree.getCheckedNodes(false, true);
+                console.log("选中的分类:" + categories[0]);
                 //保存校验 TO DO
                 if (!require(_this.course.name, '名称')) {
                     return;
@@ -305,9 +323,7 @@
                 if (!length(_this.course.summary, '概述', 1, 2000)) {
                     return;
                 }
-                // if (!length(_this.course.image, '封面', 1, 100)) {
-                //     return;
-                // }
+
 
                 _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/save', {
                     id: _this.course.id,
@@ -323,11 +339,14 @@
                     sort: _this.course.sort,
                     gmtCreate: _this.course.gmtCreate,
                     gmtModified: _this.course.gmtModified,
+                    categoryDtos: categories
                 }).then((response) => {
                         if (response.data.success) {
                             alertSuccess("保存成功");
                             $(".modal").modal("hide");
                             _this.list(1);
+                            // 清空当前选择
+                            _this.$refs.tree.setCheckedNodes([]);
                         } else {
                             alertWarn(response.data.message);
                         }
@@ -347,16 +366,28 @@
              * 获取分类数据
              */
             getCategory() {
+                console.log("getCategory");
                 let _this = this;
-                Loading.show();
                 _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/category/all').then((response) => {
+                        console.log("gc resp" + response);
                         _this.categories = response.data.content;
-                    Loading.hide();
-                    console.log("res:"+_this.categories);
                     }
                 )
+            },
+            /**
+             * 获取选中的分类数据
+             */
+            getSelectedCategories(courseId) {
+                console.log("getSelectedCategories");
+                let _this = this;
+                let keys = [];
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course-category/get-selected-categories/' + courseId).then((response) => {
+                        console.log("查询结果:" + response);
+                        _this.selectedCategories = response.data.content;
+                        console.log("getselect-keys:" + _this.selectedCategories);
+                    }
+                );
             }
-
         }
     }
 </script>

@@ -3,32 +3,40 @@ package com.vi.server.service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.vi.server.domain.Course;
+import com.vi.server.domain.CourseCategory;
 import com.vi.server.domain.CourseExample;
+import com.vi.server.dto.CategoryDto;
+import com.vi.server.dto.CourseCategoryDto;
 import com.vi.server.dto.CourseDto;
 import com.vi.server.dto.PageDto;
 import com.vi.server.enums.ChargeEnum;
 import com.vi.server.enums.CourseLevelEnum;
 import com.vi.server.enums.CourseStatusEnum;
 import com.vi.server.mapper.CourseMapper;
-import com.vi.server.mapper.my.MyCourseMapper;
+import com.vi.server.mapper.custom.CustomCourseMapper;
 import com.vi.server.util.CopyUtil;
 import com.vi.server.util.UuidUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
 @Service
+@Transactional
 public class CourseService {
     @Resource
     private CourseMapper courseMapper;
     @Resource
-    private MyCourseMapper myCourseMapper;
+    private CustomCourseMapper customCourseMapper;
+    @Resource
+    private CourseCategoryService courseCategoryService;
 
     public void list(PageDto pageDto) {
         PageHelper.startPage(pageDto.getPage(), pageDto.getPageSize());
@@ -50,7 +58,16 @@ public class CourseService {
             insert(course);
         } else {
             update(course);
+            courseCategoryService.deleteByCourseId(course.getId());
         }
+        List<CategoryDto> categoryDtos = courseDto.getCategoryDtos();
+        List<CourseCategoryDto> courseCategoryDtos = new LinkedList<>();
+        categoryDtos.stream().forEach(
+                ele -> courseCategoryDtos.
+                        add(new CourseCategoryDto(UuidUtil.getShortUuid(),
+                                               course.getId(),
+                                               ele.getId())));
+        courseCategoryService.saveBatch(courseCategoryDtos);
     }
 
     private void insert(Course course) {
@@ -75,9 +92,10 @@ public class CourseService {
 
     public void delete(String id) {
         courseMapper.deleteByPrimaryKey(id);
+        courseCategoryService.deleteByCourseId(id);
     }
 
     public void updateTime(String courseId) {
-        myCourseMapper.updateTime(courseId);
+        customCourseMapper.updateTime(courseId);
     }
 }

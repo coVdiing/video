@@ -4,6 +4,7 @@ import com.vi.server.dto.CategoryDto;
 import com.vi.server.dto.PageDto;
 import com.vi.server.dto.ResponseDto;
 import com.vi.server.service.CategoryService;
+import com.vi.server.service.CourseCategoryService;
 import com.vi.server.util.ValidateUtil;
 import com.vi.server.vo.CategoryVo;
 import io.swagger.annotations.Api;
@@ -24,6 +25,9 @@ public class CategoryController {
 
     @Resource
     private CategoryService categoryService;
+
+    @Resource
+    private CourseCategoryService courseCategoryService;
 
     @ApiOperation("商品分类 列表")
     @PostMapping("/all")
@@ -54,5 +58,4 @@ public class CategoryController {
         categoryService.delete(id);
         return ResponseDto.ok();
     }
-
 }

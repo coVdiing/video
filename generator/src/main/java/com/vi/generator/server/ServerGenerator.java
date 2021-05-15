@@ -42,7 +42,7 @@ public class ServerGenerator {
         String tableNameCn = DbUtil.getTableComment(tableName);
 
         Map<String, Object> map = new HashMap<>();
-        List<Field> fields = DbUtil.getColumnByTableName(domain);
+        List<Field> fields = DbUtil.getColumnByTableName(tableName);
         Set<String> typeSet = getJavaTypes(fields);
         map.put("Domain", upDomain);
         map.put("domain", domain);

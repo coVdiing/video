@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.vi.server.mapper.custom.CustomCourseCategoryMapper">
+    <insert id="saveBatch" parameterType="list">
+        INSERT INTO course_category(id,course_id,category_id) VALUES
+        <foreach collection="courseCategories" item="courseCategory" separator=",">
+            (#{courseCategory.id},#{courseCategory.courseId},#{courseCategory.categoryId})
+        </foreach>
+    </insert>
+</mapper>

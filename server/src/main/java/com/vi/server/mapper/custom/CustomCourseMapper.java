@@ -1,7 +1,7 @@
-package com.vi.server.mapper.my;
+package com.vi.server.mapper.custom;
 
 import org.apache.ibatis.annotations.Param;
 
-public interface MyCourseMapper {
+public interface CustomCourseMapper {
     void updateTime(@Param("courseId") String courseId);
 }
