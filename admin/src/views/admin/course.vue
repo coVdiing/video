@@ -1,5 +1,7 @@
 <template>
     <div>
+
+
         <p>
             <button v-on:click="add()" class="btn btn-white btn-default btn-round">
                 <i class="ace-icon fa fa-edit green"></i>
@@ -69,15 +71,18 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">新增</h5>
+                        <h5 class="modal-title">新增课程</h5>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">id</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" v-model="course.id"/>
-                            </div>
+                            <el-tree
+                                    :data="categories"
+                                    show-checkbox
+                                    node-key="id"
+                                    :props="defaultProps">
+                            </el-tree>
                         </div>
+
                         <br>
                         <br>
                         <div class="form-group">
@@ -213,6 +218,11 @@
                 CHARGE: CHARGE,
                 COURSE_LEVEL: COURSE_LEVEL,
                 COURSE_STATUS: COURSE_STATUS,
+                categories:[],
+                defaultProps: {
+                    children: 'children',
+                    label: 'name'
+                }
             }
         },
         mounted() {
@@ -258,8 +268,8 @@
             add() {
                 let _this = this;
                 _this.course = {}
-                console.log('新增列表')
                 $(".modal").modal("show");
+                _this.getCategory();
             },
             /**
              * 列表查询
@@ -332,6 +342,19 @@
             },
             showCourseStatus(status) {
                 return showCourseStatus(status);
+            },
+            /**
+             * 获取分类数据
+             */
+            getCategory() {
+                let _this = this;
+                Loading.show();
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/category/all').then((response) => {
+                        _this.categories = response.data.content;
+                    Loading.hide();
+                    console.log("res:"+_this.categories);
+                    }
+                )
             }
 
         }

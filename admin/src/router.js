@@ -7,6 +7,7 @@ import Chapter from "./views/admin/chapter.vue"
 import Section from "./views/admin/section.vue"
 import Course from "./views/admin/course"
 import Category from "./views/admin/category"
+import Test from "./views/admin/test"
 
 Vue.use(Router);
 
@@ -43,6 +44,10 @@ export default new Router({
             path: "business/category",
             name: "business/category",
             component: Category
+        },{
+            path: "business/test",
+            name: "business/test",
+            component: Test
         }]
     }]
 })

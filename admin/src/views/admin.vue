@@ -441,6 +441,14 @@
                                 <b class="arrow"></b>
                             </li>
 
+                            <li class="active" id="business-test-sidebar">
+                                <router-link to="/business/test">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    测试
+                                </router-link>
+                                <b class="arrow"></b>
+                            </li>
+
                         </ul>
                     </li>
                 </ul><!-- /.nav-list -->
