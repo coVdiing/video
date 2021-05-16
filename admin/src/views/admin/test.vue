@@ -6,9 +6,30 @@
                 node-key="id"
                 :props="defaultProps">
         </el-tree>
+        <el-button v-on:click="creatEditor()">富文本编辑</el-button>
+        <div class="modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">课程内容</h5>
+                    </div>
+                    <div class="modal-body">
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" v-on:click="save()">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 <script>
+    import E from 'wangeditor';
+
     export default {
         data() {
             return {
@@ -342,13 +363,36 @@
                             }
                         ]
                     }
-                ]
-            ,
+                ],
                 defaultProps: {
                     children: 'children',
                     label: 'name'
-                }
+                },
+                editor: {}
             };
+        },
+        mounted() {
+            // 初始化富文本编辑器
+            this.editor = new E('.modal-body');
+            // 设置编辑区域高度为 500px
+            this.editor.config.height = 400
+            this.editor.create();
+            this.editor.config.uploadImgShowBase64 = true;
+            this.editor.config.showFullScreen = true
+        },
+        methods: {
+            creatEditor() {
+                $(".modal").modal("show");
+            },
+            save() {
+                console.log("save:");
+                let _this = this;
+                let story = _this.editor.txt.html();
+                $(".modal").modal("hide");
+                console.log('story:' + story);
+                // 清空内容
+                _this.editor.txt.clear();
+            }
         }
     };
 </script>

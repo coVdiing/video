@@ -1,5 +1,7 @@
 package com.vi.business.controller.admin;
 
+import com.vi.server.domain.CourseContent;
+import com.vi.server.dto.CourseContentDto;
 import com.vi.server.dto.CourseDto;
 import com.vi.server.dto.PageDto;
 import com.vi.server.dto.ResponseDto;
@@ -54,6 +56,20 @@ public class CourseController {
             @PathVariable String id) {
         courseService.delete(id);
         return ResponseDto.ok();
+    }
+
+    @ApiOperation("保存课程内容")
+    @PostMapping("/save-content")
+    public ResponseDto saveContent(@RequestBody CourseContentDto courseContentDto) {
+        courseService.saveContent(courseContentDto);
+        return ResponseDto.ok();
+    }
+
+    @ApiOperation("查询课程内容")
+    @GetMapping("/get-content/{id}")
+    public ResponseDto<CourseContent> getContent(@PathVariable String id) {
+        CourseContent content= courseService.getContent(id);
+        return ResponseDto.ok().data(content);
     }
 
 }

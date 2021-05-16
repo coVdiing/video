@@ -227,7 +227,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.vi.server.domain.CourseContent">
     update course_content
-    set gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+    set content = #{content},
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=CHAR}
   </update>

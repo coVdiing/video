@@ -52,6 +52,9 @@
                             <button class="btn btn-white btn-xs btn-info" v-on:click="toChapter(course)">
                                 大章
                             </button>
+                            <button class="btn btn-white btn-xs btn-info" v-on:click="editContent(course)">
+                                内容
+                            </button>
                             <button class="btn btn-white btn-xs btn-info" v-on:click="edit(course)">
                                 编辑
                             </button>
@@ -67,7 +70,7 @@
         <pagination ref="pagination" v-bind:list="list" v-bind:itemCount="8"></pagination>
 
 
-        <div class="modal" tabindex="-1">
+        <div class="modal" id="courseEdit" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -197,6 +200,24 @@
                 </div>
             </div>
         </div>
+
+        <div id="editor" class="modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">课程内容</h5>
+                    </div>
+                    <div class="modal-body" id="editor-body">
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" v-on:click="saveContent()">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -208,6 +229,7 @@
     import {showConfirm} from '../../../public/static/js/confirm.js';
     import {require, length} from "../../../public/static/js/validator";
     import {showCharge, showCourseLevel, showCourseStatus} from "../../../public/static/js/common";
+    import E from "wangeditor";
 
     export default {
         components: {Pagination},
@@ -225,7 +247,8 @@
                     label: 'name'
                 },
                 title: "",
-                selectedCategories: []
+                selectedCategories: [],
+                editor: {}
             }
         },
         mounted() {
@@ -233,6 +256,12 @@
             _this.$refs.pagination.size = 5;
             _this.$parent.activeSidebar("business-course-sidebar");
             _this.list();
+            // 富文本编辑器加载
+            _this.editor = new E('#editor-body');
+            // 开启图片base64保存和展示
+            this.editor.config.uploadImgShowBase64 = true;
+            this.editor.config.showFullScreen = true
+            _this.editor.create();
         },
         methods: {
             /**
@@ -262,7 +291,7 @@
              */
             edit(course) {
                 let _this = this;
-                $(".modal").modal("show");
+                $("#courseEdit").modal("show");
                 _this.course = $.extend({}, course);
                 _this.title = "编辑课程";
                 _this.getCategory();
@@ -270,8 +299,8 @@
                 setTimeout(function () {
                     console.log('edit:' + _this.selectedCategories);
                     let arr = _this.selectedCategories;
-                    for(let i = 0; i < arr.length;i++) {
-                        _this.$refs.tree.setChecked(arr[i],true,false);
+                    for (let i = 0; i < arr.length; i++) {
+                        _this.$refs.tree.setChecked(arr[i], true, false);
                     }
                 }, 200);
             },
@@ -282,7 +311,7 @@
                 let _this = this;
                 _this.course = {}
                 _this.$refs.tree.setCheckedNodes([]);
-                $(".modal").modal("show");
+                $("#courseEdit").modal("show");
                 _this.getCategory();
                 _this.title = "新增课程";
             },
@@ -387,6 +416,36 @@
                         console.log("getselect-keys:" + _this.selectedCategories);
                     }
                 );
+            },
+            /**
+             * 编辑课程内容
+             * @param course
+             */
+            editContent(course) {
+                let _this = this;
+                _this.course = course;
+                // 查询之前先清空文本框
+                _this.editor.txt.clear();
+                // 查询当前课程内容，展示在富文本框中
+                _this.$ajax.get(process.env.VUE_APP_SERVER + '/business/admin/course/get-content/' + course.id).then((resp) => {
+                    let content = resp.data.content.content;
+                    _this.editor.txt.html(content);
+                });
+                $("#editor").modal({show: "show", backdrop: 'static'});
+            },
+            /**
+             * 保存课程内容
+             */
+            saveContent() {
+                let _this = this;
+                let content = _this.editor.txt.html();
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/save-content', {
+                    content: content,
+                    id: _this.course.id
+                }).then((resp) => {
+                    $("#editor").modal("hide");
+                    _this.editor.txt.clear();
+                })
             }
         }
     }
