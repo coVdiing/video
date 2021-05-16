@@ -150,7 +150,11 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">顺序</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control" v-model="section.sort" />
+                                    <el-select  v-model="section.sort" >
+                                        <el-option v-for="item in sortArr"
+                                                   :value="item" :key="item">
+                                        </el-option>
+                                    </el-select>
                                 </div>
                             </div>
                             <br>
@@ -201,13 +205,14 @@
                 section: {},
                 CHARGE:CHARGE,
                 chapter:{},
-                course:{}
+                course:{},
+                sortArr:[]
         }
         },
         mounted() {
             let _this = this;
             _this.$refs.pagination.size = 5;
-            _this.$parent.activeSidebar("business-section-sidebar");
+            _this.$parent.activeSidebar("business-course-sidebar");
             _this.course = SessionStorage.get("course");
             _this.chapter = SessionStorage.get("chapter");
             _this.list();
@@ -261,6 +266,10 @@
                         console.log("查询章列表结果:", response);
                         _this.sections = response.data.content.list;
                         _this.$refs.pagination.render(page, response.data.content.total);
+                        _this.sortArr = [];
+                        for(let i = 1; i <= response.data.content.total;i++) {
+                            _this.sortArr.push(i);
+                        }
                     }
                 )
             },

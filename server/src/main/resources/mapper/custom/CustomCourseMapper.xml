@@ -6,4 +6,12 @@
         UPDATE course c set `time` = (SELECT SUM(`time`) FROM section WHERE course_id = #{courseId})
         WHERE id = #{courseId}
     </update>
+
+    <update id="updateSortForward">
+        UPDATE course c set sort = sort+1 where c.`sort` &gt;= #{sort.newSort} and c.`sort` &lt; #{sort.oldSort}
+    </update>
+
+    <update id="updateSortRetreat" parameterType="com.vi.server.dto.SortDto">
+        UPDATE course c set sort = sort-1 where c.sort &gt; #{sort.oldSort} and c.sort &lt;= #{sort.newSort}
+    </update>
 </mapper>

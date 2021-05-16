@@ -28,6 +28,7 @@
             <tr>
                 <th>名称</th>
                 <th>课程</th>
+                <th>排序</th>
                 <th>操作</th>
             </tr>
             </thead>
@@ -37,13 +38,14 @@
             <tr v-for="chapter in chapters">
                 <td>{{chapter.name}}</td>
                 <td>{{course.name}}</td>
+                <td>{{chapter.sort}}</td>
                 <td>
                     <div class="hidden-sm hidden-xs btn-group">
                         <button class="btn btn-white btn-xs btn-info" v-on:click="toSection(chapter)">
                             小节
                         </button>
                         <button class="btn btn-xs btn-info" v-on:click="edit(chapter)">
-                           编辑
+                            编辑
                         </button>
 
                         <button class="btn btn-xs btn-danger" v-on:click="del(chapter.id)">
@@ -97,9 +99,15 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">新增章节</h5>
+                        <h5 class="modal-title">{{title}}</h5>
                     </div>
                     <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">课程</label>
+                            <p class="col-sm-10">{{course.name}}</p>
+                        </div>
+                        <br>
+                        <br>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">名称</label>
                             <div class="col-sm-10">
@@ -108,10 +116,18 @@
                         </div>
                         <br>
                         <br>
+
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">课程</label>
-                            <p class="col-sm-10">{{course.name}}</p>
+                            <label class="col-sm-2 control-label">排序</label>
+                            <el-select class="col-sm-10" v-model="chapter.sort">
+                                <el-option v-for="item in sortArr"
+                                           :key="item"
+                                           :label="item"
+                                           :value="item"></el-option>
+                            </el-select>
                         </div>
+                        <br>
+                        <br>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
@@ -139,13 +155,15 @@
             return {
                 chapters: [],
                 chapter: {},
-                course:{}
+                course: {},
+                title: "",
+                sortArr: []
             }
         },
         mounted() {
             let _this = this;
             _this.$refs.pagination.size = 5;
-            _this.$parent.activeSidebar("business-chapter-sidebar");
+            _this.$parent.activeSidebar("business-course-sidebar");
             _this.course = SessionStorage.get("course") || {}
             if (Tool.isEmpty(course)) {
                 _this.$router.push("/welcome");
@@ -159,7 +177,7 @@
             del(id) {
                 let _this = this;
                 showConfirm("删除大章列表，操作不可恢复", function () {
-                    _this.$ajax.delete(process.env.VUE_APP_SERVER+'/business/admin/chapter/delete/' + id).then((response) => {
+                    _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/chapter/delete/' + id).then((response) => {
                             console.log("删除结果:", response);
                             _this.list(1);
                         }
@@ -173,6 +191,7 @@
             edit(chapter) {
                 let _this = this;
                 $(".modal").modal("show");
+                _this.title = "修改大章";
                 _this.chapter = $.extend({}, chapter);
                 console.log(_this.chapter)
             },
@@ -181,8 +200,8 @@
              */
             add() {
                 let _this = this;
-                _this.chapter = {}
-                console.log('新增大章列表')
+                _this.chapter = {};
+                _this.title = "新增大章";
                 $(".modal").modal("show");
             },
             /**
@@ -191,7 +210,7 @@
             list(page) {
                 let _this = this;
                 Loading.show();
-                _this.$ajax.post(process.env.VUE_APP_SERVER+'/business/admin/chapter/list', {
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/chapter/list', {
                     page: page,
                     pageSize: _this.$refs.pagination.size,
                     courseId: _this.course.id
@@ -200,6 +219,11 @@
                         console.log("查询章列表结果:", response);
                         _this.chapters = response.data.content.list;
                         _this.$refs.pagination.render(page, response.data.content.total);
+                        _this.sortArr = [];
+                        for (let i = 1; i <= response.data.content.total; i++) {
+                            _this.sortArr.push(i);
+                        }
+                        console.log("sortArr:" + _this.sortArr);
                     }
                 )
             },
@@ -214,10 +238,11 @@
                     return;
                 }
                 _this.chapter.courseId = _this.course.id;
-                _this.$ajax.post(process.env.VUE_APP_SERVER+'/business/admin/chapter/save', {
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/chapter/save', {
                     name: _this.chapter.name,
                     courseId: _this.chapter.courseId,
-                    id: _this.chapter.id
+                    id: _this.chapter.id,
+                    sort: _this.chapter.sort
                 }).then((response) => {
                         if (response.data.success) {
                             alertSuccess("保存成功");

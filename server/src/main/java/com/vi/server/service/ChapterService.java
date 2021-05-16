@@ -29,7 +29,7 @@ public class ChapterService {
         PageHelper.startPage(chapterPageDto.getPage(), chapterPageDto.getPageSize());
         ChapterExample chapterExample = new ChapterExample();
         // criteria等同于where条件
-        chapterExample.setOrderByClause("gmt_create desc");
+        chapterExample.setOrderByClause("sort asc, gmt_create desc");
         ChapterExample.Criteria criteria = chapterExample.createCriteria();
         if (!StringUtils.isEmpty(chapterPageDto.getCourseId())) {
             criteria.andCourseIdEqualTo(chapterPageDto.getCourseId());

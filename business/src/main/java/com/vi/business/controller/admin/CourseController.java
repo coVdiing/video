@@ -1,10 +1,7 @@
 package com.vi.business.controller.admin;
 
 import com.vi.server.domain.CourseContent;
-import com.vi.server.dto.CourseContentDto;
-import com.vi.server.dto.CourseDto;
-import com.vi.server.dto.PageDto;
-import com.vi.server.dto.ResponseDto;
+import com.vi.server.dto.*;
 import com.vi.server.service.CourseService;
 import com.vi.server.util.ValidateUtil;
 import io.swagger.annotations.Api;
@@ -72,4 +69,10 @@ public class CourseController {
         return ResponseDto.ok().data(content);
     }
 
+    @ApiOperation("更新课程排序")
+    @PostMapping("/update-sort/{id}")
+    public ResponseDto updateSort(@PathVariable String id,@RequestBody SortDto sort) {
+        courseService.updateSort(id,sort);
+        return ResponseDto.ok();
+    }
 }

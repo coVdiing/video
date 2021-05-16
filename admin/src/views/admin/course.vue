@@ -58,6 +58,9 @@
                             <button class="btn btn-white btn-xs btn-info" v-on:click="edit(course)">
                                 编辑
                             </button>
+                            <button class="btn btn-white btn-xs btn-info" v-on:click="editSort(course)">
+                                排序
+                            </button>
                             <button class="btn btn-white btn-xs btn-danger" v-on:click="del(course.id)">
                                 删除
                             </button>
@@ -167,8 +170,8 @@
                         </div>
                         <br>
                         <br>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">顺序</label>
+                        <div class="form-group" v-show="!course.id">
+                            <label class="col-sm-2 control-label" >顺序</label>
                             <div class="col-sm-10">
                                 <input class="form-control" v-model="course.sort"/>
                             </div>
@@ -200,6 +203,37 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal" id="sortEdit" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">修改排序</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">当前排序</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" v-model="sort.oldSort" disabled="true"/>
+                            </div>
+                            <br>
+                            <br>
+                            <label class="col-sm-2 control-label">新排序</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" v-model="course.sort"/>
+                            </div>
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" v-on:click="updateSort()">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <div id="editor" class="modal" tabindex="-1">
             <div class="modal-dialog">
@@ -248,7 +282,11 @@
                 },
                 title: "",
                 selectedCategories: [],
-                editor: {}
+                editor: {},
+                sort: {
+                    oldSort:{},
+                    newSort:{}
+                }
             }
         },
         mounted() {
@@ -443,8 +481,42 @@
                     content: content,
                     id: _this.course.id
                 }).then((resp) => {
+                    if(resp.data.success) {
+                        alertSuccess("保存成功");
+                    } else {
+                        alertWarn(resp.data.message);
+                    }
                     $("#editor").modal("hide");
                     _this.editor.txt.clear();
+                })
+            },
+            /**
+             * 修改排序
+             */
+            editSort(course) {
+                let _this = this;
+                _this.course = $.extend({}, course);
+                _this.sort.oldSort = course.sort;
+                $("#sortEdit").modal("show");
+            },
+            /**
+             * 保存排序
+             */
+            updateSort() {
+                let _this = this;
+                _this.sort.newSort = _this.course.sort;
+                _this.$ajax.post(process.env.VUE_APP_SERVER+"/business/admin/course/update-sort/"+_this.course.id,{
+                    newSort: _this.sort.newSort,
+                    oldSort: _this.sort.oldSort
+                }).then((resp) => {
+                    console.log("updateSort resp:" + resp);
+                    if (resp.data.success) {
+                        alertSuccess("更新排序成功");
+                    } else {
+                        alertWarn("更新排序失败");
+                    }
+                    $("#sortEdit").modal("hide");
+                    this.list(1);
                 })
             }
         }

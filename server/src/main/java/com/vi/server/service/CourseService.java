@@ -43,7 +43,7 @@ public class CourseService {
         PageHelper.startPage(pageDto.getPage(), pageDto.getPageSize());
         CourseExample courseExample = new CourseExample();
         // criteria等同于where条件
-        courseExample.setOrderByClause("gmt_create desc");
+        courseExample.setOrderByClause("sort asc,gmt_create desc");
         List<Course> courseList = courseMapper.selectByExample(courseExample);
         List<CourseDto> list = new ArrayList();
         PageInfo pageInfo = new PageInfo(courseList);
@@ -112,5 +112,19 @@ public class CourseService {
 
     public CourseContent getContent(String id) {
         return courseContentMapper.selectByPrimaryKey(id);
+    }
+
+    public void updateSort(String id, SortDto sort) {
+        Integer oldSort = sort.getOldSort();
+        Integer newSort = sort.getNewSort();
+        if (oldSort > newSort) {
+            customCourseMapper.updateSortForward(sort);
+        } else {
+            customCourseMapper.updateSortRetreat(sort);
+        }
+        Course course = new Course();
+        course.setId(id);
+        course.setSort(sort.getNewSort());
+        courseMapper.updateByPrimaryKeySelective(course);
     }
 }

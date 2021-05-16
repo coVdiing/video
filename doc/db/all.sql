@@ -23,6 +23,8 @@ insert into `chapter` (id, course_id, name,gmt_create) values ('00000012', '0000
 insert into `chapter` (id, course_id, name,gmt_create) values ('00000013', '00000000', '测试大章13',now());
 insert into `chapter` (id, course_id, name,gmt_create) values ('00000014', '00000000', '测试大章14',now());
 
+-- chapter表新增排序字段
+alter table chapter add column sort int;
 -- 小节
 DROP TABLE IF EXISTS `section`;
 CREATE TABLE `section` (
