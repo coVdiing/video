@@ -39,11 +39,9 @@ public class TeacherController {
             @ApiParam(value="",required = true)
             @RequestBody TeacherDto teacherDto) {
         // 保存校验
-        ValidateUtil.isEmpty(teacherDto.getId(),"id");
         ValidateUtil.isEmpty(teacherDto.getName(),"姓名");
         ValidateUtil.validateLength(teacherDto.getName(),"姓名",1,50);
         ValidateUtil.validateLength(teacherDto.getNickname(),"昵称",1,50);
-        ValidateUtil.validateLength(teacherDto.getImage(),"头像",1,100);
         ValidateUtil.validateLength(teacherDto.getPosition(),"职位",1,50);
         ValidateUtil.validateLength(teacherDto.getMotto(),"座右铭",1,50);
         ValidateUtil.validateLength(teacherDto.getIntro(),"简介",1,500);

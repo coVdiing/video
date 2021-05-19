@@ -1,189 +1,120 @@
 <template>
     <div>
         <p>
-            <button v-on:click="add()" class="btn btn-white btn-default btn-round">
-                <i class="ace-icon fa fa-edit green"></i>
+            <el-button @click="add()" type="primary" size="small" style="margin-left: 16px;">
                 新增
-            </button>
+            </el-button>
             &nbsp;
-            <!-- PAGE CONTENT BEGINS -->
-            <button v-on:click="list()" class="btn btn-white btn-default btn-round">
-                <i class="ace-icon fa fa-times red2"></i>
+            <el-button v-on:click="list(1)" type="primary" size="small">
                 刷新
-            </button>
+            </el-button>
+
+
         </p>
-        <div class="alert alert-warning" id="warn" role="alert" hidden="hidden">
-            A simple warning alert—check it out!
-        </div>
-        <table id="simple-table" class="table  table-bordered table-hover">
-            <thead>
-            <tr>
-                                    <th>id</th>
-                    <th>姓名</th>
-                    <th>昵称</th>
-                    <th>头像</th>
-                    <th>职位</th>
-                    <th>座右铭</th>
-                    <th>简介</th>
-                    <th>创建时间</th>
-                    <th>修改时间</th>
-                <th>操作</th>
-            </tr>
-            </thead>
 
-            <tbody>
-            <!--eslint-disable-next-line-->
-            <tr v-for="teacher in teachers">
-                    <td>{{teacher.id}}</td>
-                    <td>{{teacher.name}}</td>
-                    <td>{{teacher.nickname}}</td>
-                    <td>{{teacher.image}}</td>
-                    <td>{{teacher.position}}</td>
-                    <td>{{teacher.motto}}</td>
-                    <td>{{teacher.intro}}</td>
-                    <td>{{teacher.gmtCreate}}</td>
-                    <td>{{teacher.gmtModified}}</td>
-                <td>
+        <el-table
+                :data="teachers"
+                style="width: 100%;margin-bottom: 20px">
+            <el-table-column type="expand">
+                <template #default="props">
+                    <el-form label-position="left" inline class="demo-table-expand">
+                        <el-form-item label="昵称">
+                            <span>{{props.row.nickname}}</span>
+                        </el-form-item>
+                        <el-form-item label="头像">
+                            <img v-show="!props.row.image" class="media-object" src="/static/image/avatar.png"/>
+                            <img v-show="props.row.image" class="media-object" v-bind:src="props.row.image"/>
+                        </el-form-item>
+                        <el-form-item label="简介">
+                            <span>{{ props.row.intro }}</span>
+                        </el-form-item>
+                        <el-form-item label="座右铭">
+                            <span>{{ props.row.motto }}</span>
+                        </el-form-item>
+                        <el-form-item label="加入时间">
+                            <span>{{ props.row.gmtCreate}}</span>
+                        </el-form-item>
+                    </el-form>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="讲师 ID"
+                    prop="id">
+            </el-table-column>
+            <el-table-column
+                    label="讲师名称"
+                    prop="name">
+            </el-table-column>
+            <el-table-column
+                    label="讲师职位"
+                    prop="position">
+            </el-table-column>
+            <el-table-column label="操作">
+                <template #default="props">
                     <div class="hidden-sm hidden-xs btn-group">
-                        <button class="btn btn-xs btn-info" v-on:click="edit(teacher)">
-                            <i class="ace-icon fa fa-pencil bigger-120"></i>
-                        </button>
-
-                        <button class="btn btn-xs btn-danger" v-on:click="del(teacher.id)">
-                            <i class="ace-icon fa fa-trash-o bigger-120"></i>
-                        </button>
+                        <el-button type="primary" icon="el-icon-edit" v-on:click="edit(props.row)"></el-button>
+                        <el-button type="danger" icon="el-icon-delete" v-on:click="del(props.row.id)"></el-button>
                     </div>
+                </template>
+            </el-table-column>
+        </el-table>
+<div style="text-align: center">
+        <pagination ref="pagination"  v-bind:list="list" v-bind:itemCount="8"></pagination>
+</div>
+        <el-drawer
+                :title="title"
+                :visible.sync="drawer"
+                :direction="direction"
+                :before-close="handleClose">
+            <el-container>
+                <el-main>
+                    <el-form :model="teacher" label-width="80px">
+                        <el-form-item label="姓名">
+                            <el-input v-model="teacher.name"></el-input>
+                        </el-form-item>
+                        <el-form-item label="昵称">
+                            <el-input v-model="teacher.nickname"></el-input>
+                        </el-form-item>
+                        <el-form-item label="头像">
+                            <el-upload
+                                    class="upload-demo"
+                                    ref="upload"
+                                    action="https://jsonplaceholder.typicode.com/posts/"
+                                    :on-preview="handlePreview"
+                                    :on-remove="handleRemove"
+                                    :file-list="fileList"
+                                    :auto-upload="false"
+                                    v-show="!teacher.id">
+                                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                                <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">
+                                    上传到服务器
+                                </el-button>
+                                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                            </el-upload>
 
-                    <div class="hidden-md hidden-lg">
-                        <div class="inline pos-rel">
-                            <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown"
-                                    data-position="auto">
-                                <i class="ace-icon fa fa-cog icon-only bigger-110"></i>
-                            </button>
-
-                            <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-                                <li>
-                                    <a href="#" class="tooltip-info" data-rel="tooltip" title="View">
-                                                                    <span class="blue">
-                                                                        <i class="ace-icon fa fa-search-plus bigger-120"></i>
-                                                                    </span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="#" class="tooltip-success" data-rel="tooltip" title="Edit">
-                                                                    <span class="green">
-                                                                        <i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
-                                                                    </span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="#" class="tooltip-error" data-rel="tooltip" title="Delete">
-                                                                    <span class="red">
-                                                                        <i class="ace-icon fa fa-trash-o bigger-120"></i>
-                                                                    </span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                            <el-avatar v-show="teacher.id && teacher.image" shape="square" :size="100" :fit="fit" :src="teacher.image"></el-avatar>
+                            <el-avatar v-show="teacher.id && !teacher.image" shape="square" :size="100" :fit="fit" src="/static/image/avatar.png"></el-avatar>
+                        </el-form-item>
+                        <el-form-item label="职位">
+                            <el-input v-model="teacher.position"/>
+                        </el-form-item>
+                        <el-form-item label="座右铭">
+                            <el-input v-model="teacher.motto"/>
+                        </el-form-item>
+                        <el-form-item label="简介">
+                            <el-input v-model="teacher.intro"/>
+                        </el-form-item>
+                    </el-form>
+                </el-main>
+                <el-footer>
+                    <div class="form-group" style="text-align: center">
+                        <el-button type="info" @click="drawer=false">关闭</el-button>
+                        <el-button type="primary" @click="save()">保存</el-button>
                     </div>
-                </td>
+                </el-footer>
+            </el-container>
+        </el-drawer>
 
-            </tr>
-            </tbody>
-        </table>
-
-        <pagination ref="pagination" v-bind:list="list" v-bind:itemCount="8"></pagination>
-
-        <div class="modal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">新增</h5>
-                    </div>
-                    <div class="modal-body">
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">id</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" v-model="teacher.id" />
-                                </div>
-                            </div>
-                            <br>
-                            <br>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">姓名</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" v-model="teacher.name" />
-                                </div>
-                            </div>
-                            <br>
-                            <br>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">昵称</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" v-model="teacher.nickname" />
-                                </div>
-                            </div>
-                            <br>
-                            <br>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">头像</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" v-model="teacher.image" />
-                                </div>
-                            </div>
-                            <br>
-                            <br>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">职位</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" v-model="teacher.position" />
-                                </div>
-                            </div>
-                            <br>
-                            <br>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">座右铭</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" v-model="teacher.motto" />
-                                </div>
-                            </div>
-                            <br>
-                            <br>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">简介</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" v-model="teacher.intro" />
-                                </div>
-                            </div>
-                            <br>
-                            <br>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">创建时间</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" v-model="teacher.gmtCreate" />
-                                </div>
-                            </div>
-                            <br>
-                            <br>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">修改时间</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" v-model="teacher.gmtModified" />
-                                </div>
-                            </div>
-                            <br>
-                            <br>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary" v-on:click="save()">保存</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
 
@@ -201,16 +132,19 @@
         data: function () {
             return {
                 teachers: [],
-            teacher:
-            {
+                teacher: {},
+                title: "",
+                fileList: [],
+                drawer: false,
+                direction: 'ltr',
+                imageUrl: ''
             }
-        }
         },
         mounted() {
             let _this = this;
             _this.$refs.pagination.size = 5;
             _this.$parent.activeSidebar("business-teacher-sidebar");
-            _this.list();
+            _this.list(1);
         },
         methods: {
             /**
@@ -232,18 +166,19 @@
              */
             edit(teacher) {
                 let _this = this;
-                $(".modal").modal("show");
+                _this.title = "修改讲师";
+                _this.drawer = true;
                 _this.teacher = $.extend({}, teacher);
-                console.log(_this.teacher)
             },
             /**
              * 新增
              */
             add() {
                 let _this = this;
+                _this.drawer = true;
+                _this.title = "新增讲师";
                 _this.teacher = {}
                 console.log('新增列表')
-                $(".modal").modal("show");
             },
             /**
              * 列表查询
@@ -270,30 +205,24 @@
                 let _this = this;
                 console.log("name:" + _this.teacher.name + ",id:" + _this.teacher.courseId);
                 //保存校验 TO DO
-                    if (!require(_this.teacher.id, 'id')){
-                        return;
-                    }
-                    if (!require(_this.teacher.name, '姓名')){
-                        return;
-                    }
-                    if (!length(_this.teacher.name, '姓名',1,50)) {
-                        return;
-                    }
-                    if (!length(_this.teacher.nickname, '昵称',1,50)) {
-                        return;
-                    }
-                    if (!length(_this.teacher.image, '头像',1,100)) {
-                        return;
-                    }
-                    if (!length(_this.teacher.position, '职位',1,50)) {
-                        return;
-                    }
-                    if (!length(_this.teacher.motto, '座右铭',1,50)) {
-                        return;
-                    }
-                    if (!length(_this.teacher.intro, '简介',1,500)) {
-                        return;
-                    }
+                if (!require(_this.teacher.name, '姓名')) {
+                    return;
+                }
+                if (!length(_this.teacher.name, '姓名', 1, 50)) {
+                    return;
+                }
+                if (!length(_this.teacher.nickname, '昵称', 1, 50)) {
+                    return;
+                }
+                if (!length(_this.teacher.position, '职位', 1, 50)) {
+                    return;
+                }
+                if (!length(_this.teacher.motto, '座右铭', 1, 50)) {
+                    return;
+                }
+                if (!length(_this.teacher.intro, '简介', 1, 500)) {
+                    return;
+                }
 
                 _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/save', {
                     id: _this.teacher.id,
@@ -308,14 +237,55 @@
                 }).then((response) => {
                         if (response.data.success) {
                             alertSuccess("保存成功");
-                            $(".modal").modal("hide");
+                            _this.drawer = false;
                             _this.list(1);
                         } else {
                             alertWarn(response.data.message);
                         }
                     }
                 );
-            }
+            },
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {
+                    });
+            },
+            /**
+             * 上传图片
+             */
+
         }
     }
 </script>
+
+<style>
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .avatar-uploader .el-upload:hover {
+        border-color: #409EFF;
+    }
+
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
+    }
+</style>
