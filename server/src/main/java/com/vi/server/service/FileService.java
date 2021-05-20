@@ -36,7 +36,8 @@ public class FileService {
             throw new RuntimeException("支持上传jpg,png格式图片");
         }
         try {
-            String basePath = System.getProperty("user.dir") + File.separator + "uploadDir";
+            String basePath = System.getProperty("user.dir") + File.separator + "uploadDir"+File.separator
+                    +DateUtil.dateFormat(new Date(),DateUtil.PATTERN_ONLY_DATE);
             File base = new File(basePath);
             if (!base.exists()) {
                 base.mkdir();

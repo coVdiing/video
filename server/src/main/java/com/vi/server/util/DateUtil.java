@@ -12,6 +12,7 @@ import java.util.Date;
 public class DateUtil {
     public static final String PATTERN_STRING = "YYYYMMddHHmmss";
     public static final String PATTERN_STRING_WITH_SEPERATOR = "YYYY-MM-dd HH:mm:ss";
+    public static final String PATTERN_ONLY_DATE = "YYYYMMdd";
 
     public static String dateFormat(Date date,String pattern) {
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
