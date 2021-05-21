@@ -3,6 +3,7 @@ package com.vi.server.service;
 import com.vi.server.util.DateUtil;
 import com.vi.server.util.UuidUtil;
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +23,7 @@ import java.util.Date;
 @Slf4j
 public class FileService {
 
-    public void upload(MultipartFile file) {
+    public String upload(MultipartFile file) {
         if (file == null) {
             log.warn("头像为空");
             throw new RuntimeException("上传头像不能为空");
@@ -45,8 +46,17 @@ public class FileService {
             String fileName = DateUtil.dateFormat(new Date(), DateUtil.PATTERN_STRING);
             String suffix = UuidUtil.getShortUuid();
             String filePath = basePath + File.separator + fileName + suffix + fileType;
+            String smallFilePath = basePath + File.separator + fileName + suffix +"_mini.jpg";
             File targetFile = new File(filePath);
             file.transferTo(targetFile);
+            // 按照比例压缩图片
+            Thumbnails.of(filePath).size(185, 185).keepAspectRatio(true).toFile(smallFilePath);
+            // 删除原图片
+            targetFile.delete();
+            // 返回给前端的路径
+            String resultPath = "uploadDir"+File.separator
+                    +DateUtil.dateFormat(new Date(),DateUtil.PATTERN_ONLY_DATE)+ File.separator + fileName + suffix +"_mini.jpg";
+            return resultPath;
         } catch (IOException e) {
             e.printStackTrace();
             log.error(e.getMessage());

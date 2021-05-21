@@ -22,20 +22,15 @@ import java.io.File;
 public class FileUploadConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        log.info("文件上传映射");
         registry.addResourceHandler("/uploadDir/**").
                 addResourceLocations("file:" + System.getProperty("user.dir") + File.separator + "uploadDir" + File.separator);
-        log.info("file:" + System.getProperty("user.dir") + File.separator + "uploadDir" + File.separator);
     }
 
     @Bean
     public MultipartConfigElement multipartConfigElement() {
-        log.info("文件上传配置");
         MultipartConfigFactory factory = new MultipartConfigFactory();
-        // tmp.dir参数在启动脚本中设置
         String path = System.getProperty("user.dir");
         String location = path + "/uploadDir";
-        // 明确指定上传文件的临时目录
         factory.setLocation(location);
         return factory.createMultipartConfig();
     }

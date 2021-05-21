@@ -26,8 +26,8 @@ public class FileController {
     @Resource
     private FileService fileService;
     @PostMapping("/upload")
-    public ResponseDto upload(@RequestParam("file") MultipartFile file) {
-        fileService.upload(file);
-        return ResponseDto.ok();
+    public ResponseDto<String> upload(@RequestParam("file") MultipartFile file) {
+        String path = fileService.upload(file);
+        return ResponseDto.ok().data(path);
     }
 }
