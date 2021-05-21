@@ -23,7 +23,8 @@
                         </el-form-item>
                         <el-form-item label="头像">
                             <img v-show="!props.row.image" class="media-object" src="/static/image/avatar.png"/>
-                            <img v-show="props.row.image" class="media-object" v-bind:src="props.row.image"/>
+                            <img v-show="props.row.image" class="media-object"
+                                 v-bind:src="imageUrlBase+props.row.image"/>
                         </el-form-item>
                         <el-form-item label="简介">
                             <span>{{ props.row.intro }}</span>
@@ -58,9 +59,9 @@
                 </template>
             </el-table-column>
         </el-table>
-<div style="text-align: center">
-        <pagination ref="pagination"  v-bind:list="list" v-bind:itemCount="8"></pagination>
-</div>
+        <div style="text-align: center">
+            <pagination ref="pagination" v-bind:list="list" v-bind:itemCount="8"></pagination>
+        </div>
         <el-drawer
                 :title="title"
                 :visible.sync="drawer"
@@ -75,25 +76,30 @@
                         <el-form-item label="昵称">
                             <el-input v-model="teacher.nickname"></el-input>
                         </el-form-item>
-                        <el-form-item label="头像">
+                        <el-form-item label="头像"  v-show="!teacher.id">
                             <el-upload
                                     class="upload-demo"
                                     ref="upload"
-                                    action="https://jsonplaceholder.typicode.com/posts/"
+                                    :action="actionUrl"
                                     :on-preview="handlePreview"
                                     :on-remove="handleRemove"
+                                    :on-success="(res, file)=> { return uploadSuccess(res, file)}"
                                     :file-list="fileList"
                                     :auto-upload="false"
-                                    v-show="!teacher.id">
+                                   >
                                 <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
                                 <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">
                                     上传到服务器
                                 </el-button>
-                                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件</div>
                             </el-upload>
 
-                            <el-avatar v-show="teacher.id && teacher.image" shape="square" :size="100" :fit="fit" :src="teacher.image"></el-avatar>
-                            <el-avatar v-show="teacher.id && !teacher.image" shape="square" :size="100" :fit="fit" src="/static/image/avatar.png"></el-avatar>
+                            <!-- 不能编辑头像，暂时注释掉 -->
+<!--                            <el-avatar v-show="teacher.id && teacher.image" shape="square" :size="100" :fit="fit"-->
+<!--                                       :src="imageUrlBase+teacher.image"></el-avatar>-->
+<!--                            <el-avatar v-show="teacher.id && !teacher.image" shape="square" :size="100" :fit="fit"-->
+<!--                                       src="/static/image/avatar.png"></el-avatar>-->
+
                         </el-form-item>
                         <el-form-item label="职位">
                             <el-input v-model="teacher.position"/>
@@ -137,7 +143,8 @@
                 fileList: [],
                 drawer: false,
                 direction: 'ltr',
-                imageUrl: ''
+                imageUrlBase: process.env.VUE_APP_SERVER + '/business/',
+                actionUrl: process.env.VUE_APP_SERVER + '/business/file/upload'
             }
         },
         mounted() {
@@ -256,6 +263,20 @@
             /**
              * 上传图片
              */
+            uploadSuccess(resp, file) {
+                let _this = this;
+                _this.teacher.image = resp.content;
+            },
+            submitUpload() {
+                this.$refs.upload.submit();
+            },
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+            },
+            imageUrl(url) {
+                let _this = this;
+                return _this.imageUrlBase + url;
+            }
 
         }
     }

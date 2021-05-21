@@ -37,7 +37,7 @@ public class FileService {
             throw new RuntimeException("支持上传jpg,png格式图片");
         }
         try {
-            String basePath = System.getProperty("user.dir") + File.separator + "uploadDir"+File.separator
+            String basePath = System.getProperty("user.dir") + "/" + "uploadDir"+"/"
                     +DateUtil.dateFormat(new Date(),DateUtil.PATTERN_ONLY_DATE);
             File base = new File(basePath);
             if (!base.exists()) {
@@ -45,8 +45,8 @@ public class FileService {
             }
             String fileName = DateUtil.dateFormat(new Date(), DateUtil.PATTERN_STRING);
             String suffix = UuidUtil.getShortUuid();
-            String filePath = basePath + File.separator + fileName + suffix + fileType;
-            String smallFilePath = basePath + File.separator + fileName + suffix +"_mini.jpg";
+            String filePath = basePath + "/" + fileName + suffix + fileType;
+            String smallFilePath = basePath + "/" + fileName + suffix +"_mini.jpg";
             File targetFile = new File(filePath);
             file.transferTo(targetFile);
             // 按照比例压缩图片
@@ -54,8 +54,8 @@ public class FileService {
             // 删除原图片
             targetFile.delete();
             // 返回给前端的路径
-            String resultPath = "uploadDir"+File.separator
-                    +DateUtil.dateFormat(new Date(),DateUtil.PATTERN_ONLY_DATE)+ File.separator + fileName + suffix +"_mini.jpg";
+            String resultPath = "uploadDir"+"/"
+                    +DateUtil.dateFormat(new Date(),DateUtil.PATTERN_ONLY_DATE)+ "/" + fileName + suffix +"_mini.jpg";
             return resultPath;
         } catch (IOException e) {
             e.printStackTrace();
