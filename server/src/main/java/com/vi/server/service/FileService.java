@@ -1,6 +1,7 @@
 package com.vi.server.service;
 
 import com.vi.server.util.DateUtil;
+import com.vi.server.util.ExceptionUtil;
 import com.vi.server.util.UuidUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Date;
 
 /**
@@ -64,7 +66,29 @@ public class FileService {
         }
     }
 
-    public static void main(String[] args) {
+    public void deleteImage(String imagePath) {
+        String basePath = System.getProperty("user.dir");
+        File file = new File(basePath + "/" + imagePath);
+        try {
+            file.delete();
+        } catch (Exception e) {
+            try {
+                log.error(ExceptionUtil.getStackInfo(e));
+            } catch (IOException ioException) {
+                log.error("删除图片时异常，获取异常信息栈失败,{}",ioException.getMessage());
+            }
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
         System.out.println(System.getProperty("user.dir"));
+        String str = "abc";
+        PrintStream ps = null;
+        try {
+            str.charAt(4);
+        } catch (Exception e) {
+            String stackInfo = ExceptionUtil.getStackInfo(e);
+            log.info("exception info:{}",stackInfo);
+        }
     }
 }

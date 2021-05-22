@@ -11,6 +11,7 @@ import com.vi.server.util.CopyUtil;
 import com.vi.server.util.UuidUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -20,9 +21,12 @@ import java.util.List;
 
 @Slf4j
 @Service
+@Transactional
 public class TeacherService {
     @Resource
     private TeacherMapper teacherMapper;
+    @Resource
+    private FileService fileService;
 
     public void list(PageDto pageDto) {
         PageHelper.startPage(pageDto.getPage(), pageDto.getPageSize());
@@ -59,6 +63,8 @@ public class TeacherService {
     }
 
     public void delete(String id) {
+        Teacher teacher = teacherMapper.selectByPrimaryKey(id);
         teacherMapper.deleteByPrimaryKey(id);
+        fileService.deleteImage(teacher.getImage());
     }
 }
