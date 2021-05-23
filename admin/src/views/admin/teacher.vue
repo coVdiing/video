@@ -24,7 +24,7 @@
                         <el-form-item label="头像">
                             <img v-show="!props.row.image" class="media-object" src="/static/image/avatar.png"/>
                             <img v-show="props.row.image" class="media-object"
-                                 v-bind:src="imageUrlBase+props.row.image"/>
+                                 v-bind:src="imageUrlBase+props.row.imagePath"/>
                         </el-form-item>
                         <el-form-item label="简介">
                             <span>{{ props.row.intro }}</span>
@@ -205,8 +205,33 @@
                         console.log("查询章列表结果:", response);
                         _this.teachers = response.data.content.list;
                         _this.$refs.pagination.render(page, response.data.content.total);
+
+                    console.log("开始处理id:"+this.teachers[0]);
+                    let idList = [];
+                    for (let i = 0; i < _this.teachers.length; i++) {
+                        console.log(i+","+_this.teachers[i].image);
+                        idList[i] = _this.teachers[i].image;
+                    }
+                    console.log("ids:" + idList);
+                    // 根据image id查询图片路径，设置进来
+                    _this.$ajax.get(process.env.VUE_APP_SERVER + '/business/admin/custom-file/find-by-ids?idList='+idList)
+                        .then((resp)=>{
+                            if (resp.data.success) {
+                                let files = resp.data.content;
+                                for(let i = 0; i < files.length;i++) {
+                                    for( let j = 0 ; j < _this.teachers.length;j++) {
+                                        if(files[i].id == _this.teachers[j].image) {
+                                            _this.teachers[j].imagePath = files[i].path;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    console.log("设置完图片的teacher list:" + _this.teachers);
                     }
                 )
+
             },
             /**
              * 新增

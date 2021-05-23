@@ -147,6 +147,8 @@ create table `teacher` (
     primary key(`id`)
 )engine=innodb default charset=utf8mb4 comment='讲师';
 
+alter table teacher modify column image varchar(8) COMMENT '头像|file表主键id';
+
 -- 文件
 drop table if exists `file`;
 create table `file` (

@@ -14,7 +14,6 @@
                     <th>用途</th>
                     <th>是否绑定数据</th>
                     <th>创建时间</th>
-                    <th>修改时间</th>
                 <th>操作</th>
             </tr>
             </thead>
@@ -30,7 +29,6 @@
                     <td>{{customFile.type}}</td>
                     <td>{{customFile.bind}}</td>
                     <td>{{customFile.gmtCreate}}</td>
-                    <td>{{customFile.gmtModified}}</td>
                 <td>
                     <div class="hidden-sm hidden-xs btn-group">
                         <button class="btn btn-xs btn-info" v-on:click="edit(customFile)">

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Api(tags = "文件管理")
 @RestController
@@ -27,8 +28,8 @@ public class CustomFileController {
     @ApiOperation("上传图片")
     @PostMapping("/upload-image")
     public ResponseDto<String> upload(@RequestParam("file") MultipartFile file) {
-        String path = customFileService.uploadImage(file);
-        return ResponseDto.ok().data(path);
+        String id = customFileService.uploadImage(file);
+        return ResponseDto.ok().data(id);
     }
 
     @ApiOperation("文件列表")
@@ -39,6 +40,13 @@ public class CustomFileController {
         customFileService.list(pageDto);
         ResponseDto data = ResponseDto.ok().data(pageDto);
         return data;
+    }
+
+    @ApiOperation("根据id查询")
+    @GetMapping("/find-by-ids")
+    public ResponseDto<List<CustomFileDto>> findByIds(@RequestParam("idList") List<String> idList) {
+        List<CustomFileDto> dtos = customFileService.findByIds(idList);
+        return ResponseDto.ok().data(dtos);
     }
 
 }

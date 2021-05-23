@@ -6,6 +6,7 @@ import com.vi.server.domain.Teacher;
 import com.vi.server.domain.TeacherExample;
 import com.vi.server.dto.PageDto;
 import com.vi.server.dto.TeacherDto;
+import com.vi.server.enums.FileTypeEnum;
 import com.vi.server.mapper.TeacherMapper;
 import com.vi.server.util.CopyUtil;
 import com.vi.server.util.UuidUtil;
@@ -54,6 +55,10 @@ public class TeacherService {
     private void insert(Teacher teacher) {
         teacher.setId(UuidUtil.getShortUuid());
         teacher.setGmtCreate(new Date());
+        // 保存讲师数据时判断是否有头像，如果有头像需要修改file表中的绑定关系
+        if (teacher.getImage() != null) {
+            fileService.updateBindByPath(teacher.getImage(), FileTypeEnum.TEACHER.getCode());
+        }
         teacherMapper.insert(teacher);
     }
 
@@ -63,6 +68,9 @@ public class TeacherService {
     }
 
     public void delete(String id) {
+        if (id == null) {
+            return;
+        }
         Teacher teacher = teacherMapper.selectByPrimaryKey(id);
         teacherMapper.deleteByPrimaryKey(id);
         fileService.deleteImage(teacher.getImage());

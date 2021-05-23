@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -72,7 +71,15 @@ public class CustomFileService {
             // 返回给前端的路径
             String resultPath = "uploadDir"+"/"
                     +DateUtil.dateFormat(new Date(),DateUtil.PATTERN_ONLY_DATE)+ "/" + fileName + suffix +"_mini.jpg";
-            return resultPath;
+            // 文件记录入表
+            CustomFile record = new CustomFile();
+            record.setName(originalFilename);
+            record.setPath(resultPath);
+            record.setSize((int) (new File(smallFilePath).length() / 1024));
+            record.setSuffix(fileType);
+            insert(record);
+            // 返回文件id
+            return record.getId();
         } catch (IOException e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -80,30 +87,23 @@ public class CustomFileService {
         }
     }
 
-    public void deleteImage(String imagePath) {
-        String basePath = System.getProperty("user.dir");
-        File file = new File(basePath + "/" + imagePath);
-        try {
-            file.delete();
-        } catch (Exception e) {
-            try {
-                log.error(ExceptionUtil.getStackInfo(e));
-            } catch (IOException ioException) {
-                log.error("删除图片时异常，获取异常信息栈失败,{}",ioException.getMessage());
-            }
+    public void deleteImage(String id) {
+        if (id == null) {
+            return;
         }
+        delete(id);
     }
 
-    public static void main(String[] args) throws IOException {
-        System.out.println(System.getProperty("user.dir"));
-        String str = "abc";
-        PrintStream ps = null;
-        try {
-            str.charAt(4);
-        } catch (Exception e) {
-            String stackInfo = ExceptionUtil.getStackInfo(e);
-            log.info("exception info:{}",stackInfo);
-        }
+    /**
+     * 根据文件id更新绑定关系
+     * @param id
+     */
+    public void updateBindByPath(String id,String type) {
+        CustomFileExample example = new CustomFileExample();
+        CustomFile file = customFileMapper.selectByPrimaryKey(id);
+        file.setBind("Y");
+        file.setType(type);
+        customFileMapper.updateByPrimaryKey(file);
     }
 
     public void list(PageDto pageDto) {
@@ -130,6 +130,7 @@ public class CustomFileService {
     }
 
     private void insert(CustomFile customFile) {
+        customFile.setBind("N");
         customFile.setId(UuidUtil.getShortUuid());
         customFile.setGmtCreate(new Date());
         customFileMapper.insert(customFile);
@@ -141,6 +142,24 @@ public class CustomFileService {
     }
 
     public void delete(String id) {
+        String basePath = System.getProperty("user.dir");
+        File file = new File(basePath + "/" + customFileMapper.selectByPrimaryKey(id).getPath());
+        try {
+            file.delete();
+        } catch (Exception e) {
+            try {
+                log.error(ExceptionUtil.getStackInfo(e));
+            } catch (IOException ioException) {
+                log.error("删除图片时异常，获取异常信息栈失败,{}",ioException.getMessage());
+            }
+        }
         customFileMapper.deleteByPrimaryKey(id);
+    }
+
+    public List<CustomFileDto> findByIds(List<String> ids) {
+        CustomFileExample example = new CustomFileExample();
+        example.createCriteria().andIdIn(ids);
+        List<CustomFile> customFiles = customFileMapper.selectByExample(example);
+        return CopyUtil.copyList(customFiles,CustomFileDto.class);
     }
 }
