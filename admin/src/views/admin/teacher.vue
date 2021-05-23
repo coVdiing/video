@@ -108,13 +108,17 @@
                             <el-input v-model="teacher.motto"/>
                         </el-form-item>
                         <el-form-item label="简介">
-                            <el-input v-model="teacher.intro"/>
+                            <el-input
+                                    type="textarea"
+                                    :autosize="{ minRows: 2, maxRows: 4}"
+                                    v-model="teacher.intro">
+                            </el-input>
                         </el-form-item>
                     </el-form>
                 </el-main>
                 <el-footer>
                     <div class="form-group" style="text-align: center">
-                        <el-button type="info" @click="drawer=false">关闭</el-button>
+                        <el-button type="info" @click="closeDrawer()">关闭</el-button>
                         <el-button type="primary" @click="save()">保存</el-button>
                     </div>
                 </el-footer>
@@ -128,7 +132,7 @@
 
 <script>
     import Pagination from '../../components/pagination';
-    import {alertSuccess, alertWarn} from '../../../public/static/js/toast.js';
+    import {alertSuccess, alertWarn,alertError} from '../../../public/static/js/toast.js';
     import {showConfirm} from '../../../public/static/js/confirm.js';
     import {require, length} from "../../../public/static/js/validator";
 
@@ -144,7 +148,7 @@
                 drawer: false,
                 direction: 'ltr',
                 imageUrlBase: process.env.VUE_APP_SERVER + '/business/',
-                actionUrl: process.env.VUE_APP_SERVER + '/business/file/upload'
+                actionUrl: process.env.VUE_APP_SERVER + '/business/admin/custom-file/upload-image'
             }
         },
         mounted() {
@@ -246,26 +250,35 @@
                             alertSuccess("保存成功");
                             _this.drawer = false;
                             _this.list(1);
+                            _this.fileList = [];
                         } else {
                             alertWarn(response.data.message);
                         }
                     }
                 );
             },
-            handleClose(done) {
+            handleClose() {
+                let _this = this;
                 this.$confirm('确认关闭？')
                     .then(_ => {
-                        done();
+                        _this.fileList = [];
+                        _this.drawer = false;
                     })
                     .catch(_ => {
                     });
+
             },
             /**
              * 上传图片
              */
             uploadSuccess(resp, file) {
                 let _this = this;
-                _this.teacher.image = resp.content;
+                if (resp.success) {
+                    _this.teacher.image = resp.content;
+                } else {
+                    alertError(resp.message);
+                    _this.fileList = [];
+                }
             },
             submitUpload() {
                 this.$refs.upload.submit();
@@ -273,11 +286,14 @@
             handleRemove(file, fileList) {
                 console.log(file, fileList);
             },
-            imageUrl(url) {
+            /**
+             * 关闭抽屉
+             */
+            closeDrawer() {
                 let _this = this;
-                return _this.imageUrlBase + url;
+                _this.drawer = false;
+                _this.fileList = [];
             }
-
         }
     }
 </script>

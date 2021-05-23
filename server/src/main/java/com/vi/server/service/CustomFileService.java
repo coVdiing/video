@@ -1,5 +1,13 @@
 package com.vi.server.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.vi.server.domain.CustomFile;
+import com.vi.server.domain.CustomFileExample;
+import com.vi.server.dto.CustomFileDto;
+import com.vi.server.dto.PageDto;
+import com.vi.server.mapper.CustomFileMapper;
+import com.vi.server.util.CopyUtil;
 import com.vi.server.util.DateUtil;
 import com.vi.server.util.ExceptionUtil;
 import com.vi.server.util.UuidUtil;
@@ -7,12 +15,16 @@ import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author: vi
@@ -23,9 +35,11 @@ import java.util.Date;
 @Service
 @Transactional
 @Slf4j
-public class FileService {
+public class CustomFileService {
+    @Resource
+    private CustomFileMapper customFileMapper;
 
-    public String upload(MultipartFile file) {
+    public String uploadImage(MultipartFile file) {
         if (file == null) {
             log.warn("头像为空");
             throw new RuntimeException("上传头像不能为空");
@@ -40,7 +54,7 @@ public class FileService {
         }
         try {
             String basePath = System.getProperty("user.dir") + "/" + "uploadDir"+"/"
-                    +DateUtil.dateFormat(new Date(),DateUtil.PATTERN_ONLY_DATE);
+                    + DateUtil.dateFormat(new Date(),DateUtil.PATTERN_ONLY_DATE);
             File base = new File(basePath);
             if (!base.exists()) {
                 base.mkdir();
@@ -90,5 +104,43 @@ public class FileService {
             String stackInfo = ExceptionUtil.getStackInfo(e);
             log.info("exception info:{}",stackInfo);
         }
+    }
+
+    public void list(PageDto pageDto) {
+        PageHelper.startPage(pageDto.getPage(), pageDto.getPageSize());
+        CustomFileExample customFileExample = new CustomFileExample();
+        // criteria等同于where条件
+        customFileExample.setOrderByClause("gmt_create desc");
+        List<CustomFile> customFileList = customFileMapper.selectByExample(customFileExample);
+        List<CustomFileDto> list = new ArrayList();
+        PageInfo pageInfo = new PageInfo(customFileList);
+        list = CopyUtil.copyList(customFileList, CustomFileDto.class);
+        pageDto.setTotal(pageInfo.getTotal());
+        pageDto.setList(list);
+    }
+
+    public void save(CustomFileDto customFileDto) {
+        CustomFile customFile = CopyUtil.copy(customFileDto, CustomFile.class);
+        log.info("customFile:{}",customFileDto);
+        if (StringUtils.isEmpty(customFileDto.getId())) {
+            insert(customFile);
+        } else {
+            update(customFile);
+        }
+    }
+
+    private void insert(CustomFile customFile) {
+        customFile.setId(UuidUtil.getShortUuid());
+        customFile.setGmtCreate(new Date());
+        customFileMapper.insert(customFile);
+    }
+
+    private void update(CustomFile customFile) {
+        customFile.setGmtModified(new Date());
+        customFileMapper.updateByPrimaryKeySelective(customFile);
+    }
+
+    public void delete(String id) {
+        customFileMapper.deleteByPrimaryKey(id);
     }
 }

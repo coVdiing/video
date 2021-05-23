@@ -24,7 +24,6 @@ public class FileUploadConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/uploadDir/**").
                 addResourceLocations("file:" + System.getProperty("user.dir") + File.separator + "uploadDir" + File.separator);
     }
-
     @Bean
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
@@ -33,5 +32,6 @@ public class FileUploadConfig implements WebMvcConfigurer {
         factory.setLocation(location);
         return factory.createMultipartConfig();
     }
+
 
 }

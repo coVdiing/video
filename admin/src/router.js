@@ -9,6 +9,7 @@ import Course from "./views/admin/course"
 import Category from "./views/admin/category"
 import Test from "./views/admin/test"
 import Teacher from "./views/admin/teacher"
+import CustomFile from "./views/admin/customFile"
 
 Vue.use(Router);
 
@@ -53,6 +54,10 @@ export default new Router({
             path: "business/teacher",
             name: "business/teacher",
             component: Teacher
+        },{
+            path: "business/customFile",
+            name: "business/customFile",
+            component: CustomFile
         }]
     }]
 })

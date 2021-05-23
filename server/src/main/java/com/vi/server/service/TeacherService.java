@@ -4,8 +4,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.vi.server.domain.Teacher;
 import com.vi.server.domain.TeacherExample;
-import com.vi.server.dto.TeacherDto;
 import com.vi.server.dto.PageDto;
+import com.vi.server.dto.TeacherDto;
 import com.vi.server.mapper.TeacherMapper;
 import com.vi.server.util.CopyUtil;
 import com.vi.server.util.UuidUtil;
@@ -26,7 +26,7 @@ public class TeacherService {
     @Resource
     private TeacherMapper teacherMapper;
     @Resource
-    private FileService fileService;
+    private CustomFileService fileService;
 
     public void list(PageDto pageDto) {
         PageHelper.startPage(pageDto.getPage(), pageDto.getPageSize());
