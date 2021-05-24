@@ -14,7 +14,6 @@
                     <th>用途</th>
                     <th>是否绑定数据</th>
                     <th>创建时间</th>
-                <th>操作</th>
             </tr>
             </thead>
 
@@ -29,53 +28,6 @@
                     <td>{{customFile.type}}</td>
                     <td>{{customFile.bind}}</td>
                     <td>{{customFile.gmtCreate}}</td>
-                <td>
-                    <div class="hidden-sm hidden-xs btn-group">
-                        <button class="btn btn-xs btn-info" v-on:click="edit(customFile)">
-                            <i class="ace-icon fa fa-pencil bigger-120"></i>
-                        </button>
-
-                        <button class="btn btn-xs btn-danger" v-on:click="del(customFile.id)">
-                            <i class="ace-icon fa fa-trash-o bigger-120"></i>
-                        </button>
-                    </div>
-
-                    <div class="hidden-md hidden-lg">
-                        <div class="inline pos-rel">
-                            <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown"
-                                    data-position="auto">
-                                <i class="ace-icon fa fa-cog icon-only bigger-110"></i>
-                            </button>
-
-                            <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-                                <li>
-                                    <a href="#" class="tooltip-info" data-rel="tooltip" title="View">
-                                                                    <span class="blue">
-                                                                        <i class="ace-icon fa fa-search-plus bigger-120"></i>
-                                                                    </span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="#" class="tooltip-success" data-rel="tooltip" title="Edit">
-                                                                    <span class="green">
-                                                                        <i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
-                                                                    </span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="#" class="tooltip-error" data-rel="tooltip" title="Delete">
-                                                                    <span class="red">
-                                                                        <i class="ace-icon fa fa-trash-o bigger-120"></i>
-                                                                    </span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </td>
-
             </tr>
             </tbody>
         </table>
