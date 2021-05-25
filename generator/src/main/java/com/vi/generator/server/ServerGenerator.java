@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ServerGenerator {
-    static String moudule = "business";
+    static String moudule = "system";
     static String toServicePath = "server/src/main/java/com/vi/server/service/";
     static String toDtoPath = "server/src/main/java/com/vi/server/dto/";
     static String toControllerPath = moudule + "/src/main/java/com/vi/" + moudule + "/controller/admin/";

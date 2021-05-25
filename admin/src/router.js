@@ -10,6 +10,7 @@ import Category from "./views/admin/category"
 import Test from "./views/admin/test"
 import Teacher from "./views/admin/teacher"
 import CustomFile from "./views/admin/customFile"
+import User from "./views/admin/user"
 
 Vue.use(Router);
 
@@ -58,6 +59,10 @@ export default new Router({
             path: "business/customFile",
             name: "business/customFile",
             component: CustomFile
+        },{
+            path: "system/user",
+            name:"system/user",
+            component: User
         }]
     }]
 })
