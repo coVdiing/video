@@ -6,6 +6,8 @@ import com.vi.server.domain.User;
 import com.vi.server.domain.UserExample;
 import com.vi.server.dto.UserDto;
 import com.vi.server.dto.PageDto;
+import com.vi.server.enums.BusinessExceptionEnum;
+import com.vi.server.exception.BusinessException;
 import com.vi.server.mapper.UserMapper;
 import com.vi.server.util.CopyUtil;
 import com.vi.server.util.UuidUtil;
@@ -15,7 +17,6 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -47,6 +48,12 @@ public class UserService {
     }
 
     private void insert(User user) {
+        // 保存之前先查询用户名是否已经存在，如果存在不允许同名用户
+        User byName = findByLoginName(user.getLoginName());
+        if (byName != null) {
+            log.error("业务异常,用户名已存在");
+            throw new BusinessException(BusinessExceptionEnum.USER_NAME_REPEAT);
+        }
         user.setId(UuidUtil.getShortUuid());
         userMapper.insert(user);
     }
@@ -57,5 +64,16 @@ public class UserService {
 
     public void delete(String id) {
         userMapper.deleteByPrimaryKey(id);
+    }
+
+    public User findByLoginName(String name) {
+        UserExample example = new UserExample();
+        example.createCriteria().andLoginNameEqualTo(name);
+        List<User> users = userMapper.selectByExample(example);
+        if (users.isEmpty()) {
+            return null;
+        } else {
+            return users.get(0);
+        }
     }
 }

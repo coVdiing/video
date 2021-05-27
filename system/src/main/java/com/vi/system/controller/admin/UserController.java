@@ -39,7 +39,6 @@ public class UserController {
             @ApiParam(value="",required = true)
             @RequestBody UserDto userDto) {
         // 保存校验
-        ValidateUtil.isEmpty(userDto.getId(),"id");
         ValidateUtil.isEmpty(userDto.getLoginName(),"登录名");
         ValidateUtil.validateLength(userDto.getLoginName(),"登录名",1,50);
         ValidateUtil.isEmpty(userDto.getName(),"昵称");
