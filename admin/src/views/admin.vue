@@ -330,117 +330,54 @@
         </div>
 
         <div class="main-container ace-save-state" id="main-container">
-
-                        <div id="sidebar" class="sidebar responsive ace-save-state">
-
-
-                            <ul class="nav nav-list">
-                                <li class="" id="welcome-sidebar">
-                                    <router-link to="/welcome">
-                                        <i class="menu-icon fa fa-tachometer"></i>
-                                        <span class="menu-text"> 欢迎 </span>
+            <div id="mySidebar" class="sidebar">
+                <el-row class="tac" >
+                    <el-col>
+                        <el-menu
+                                default-active="2"
+                                class="el-menu-vertical-demo"
+                                @open="handleOpen"
+                                @close="handleClose">
+                            <el-submenu index="1">
+                                <template slot="title">
+                                    <i class="el-icon-location"></i>
+                                    <span>系统管理</span>
+                                </template>
+                                <el-menu-item-group>
+                                    <!--                                    <template slot="title">系统管理</template>-->
+                                    <router-link to="/system/user">
+                                        <el-menu-item index="1-1">用户管理</el-menu-item>
                                     </router-link>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="active open">
-                                    <a href="#" class="dropdown-toggle">
-                                        <i class="menu-icon fa fa-desktop"></i>
-                                        <span class="menu-text"> 系统管理 </span>
-
-                                        <b class="arrow fa fa-angle-down"></b>
-                                    </a>
-
-                                    <b class="arrow"></b>
-
-                                    <ul class="submenu">
-                                        <li class="">
-                                            <a href="" id="system-user-sidebar">
-                                                <router-link to="/system/user">
-                                                    <i class="menu-icon fa fa-caret-right"></i>
-                                                    用户管理
-                                                </router-link>
-                                            </a>
-
-                                            <b class="arrow"></b>
-                                        </li>
-                                    </ul>
-
-                                    <ul class="submenu">
-                                        <li class="">
-                                            <a href="#">
-                                                <i class="menu-icon fa fa-caret-right"></i>
-                                                权限管理
-                                            </a>
-
-                                            <b class="arrow"></b>
-                                        </li>
-                                    </ul>
-                                </li>
-
-                                <li class="active open">
-                                    <a href="#" class="dropdown-toggle">
-                                        <i class="menu-icon fa fa-list"></i>
-                                        <span class="menu-text"> 业务管理 </span>
-
-                                        <b class="arrow fa fa-angle-down"></b>
-                                    </a>
-
-                                    <b class="arrow"></b>
-
-                                    <ul class="submenu">
-
-                                        <li class="" id="business-category-sidebar">
-                                            <router-link to="/business/category">
-                                                <i class="menu-icon fa fa-caret-right"></i>
-                                                分类管理
-                                            </router-link>
-                                            <b class="arrow"></b>
-                                        </li>
-
-                                        <li class="" id="business-course-sidebar">
-                                            <router-link to="/business/course">
-                                                <i class="menu-icon fa fa-caret-right"></i>
-                                                课程管理
-                                            </router-link>
-                                            <b class="arrow"></b>
-                                        </li>
-
-                                        <li class="" id="business-teacher-sidebar">
-                                            <router-link to="/business/teacher">
-                                                <i class="menu-icon fa fa-caret-right"></i>
-                                                讲师管理
-                                            </router-link>
-                                            <b class="arrow"></b>
-                                        </li>
-
-                                        <li class="" id="business-customFile-sidebar">
-                                            <router-link to="/business/customFile">
-                                                <i class="menu-icon fa fa-caret-right"></i>
-                                                文件管理
-                                            </router-link>
-                                            <b class="arrow"></b>
-                                        </li>
-
-                                        <li class="" id="business-test-sidebar">
-                                            <router-link to="/business/test">
-                                                <i class="menu-icon fa fa-caret-right"></i>
-                                                测试
-                                            </router-link>
-                                            <b class="arrow"></b>
-                                        </li>
-
-                                    </ul>
-                                </li>
-                            </ul><!-- /.nav-list -->
-
-
-                            <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
-                                <i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state"
-                                   data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
-                            </div>
-                        </div>
+                                    <el-menu-item index="1-2">权限管理</el-menu-item>
+                                </el-menu-item-group>
+                            </el-submenu>
+                            <el-submenu index="2">
+                                <template slot="title">
+                                    <i class="el-icon-menu"></i>
+                                    <span>业务管理</span>
+                                </template>
+                                <el-menu-item-group>
+                                    <router-link to="/business/category">
+                                        <el-menu-item index="2-0">分类管理</el-menu-item>
+                                    </router-link>
+                                    <router-link to="/business/course">
+                                        <el-menu-item index="2-1">课程管理</el-menu-item>
+                                    </router-link>
+                                    <router-link to="/business/teacher">
+                                        <el-menu-item index="2-2">讲师管理</el-menu-item>
+                                    </router-link>
+                                    <router-link to="/business/customFile">
+                                        <el-menu-item index="2-3">文件管理</el-menu-item>
+                                    </router-link>
+                                    <router-link to="/business/test">
+                                        <el-menu-item index="2-4">测试</el-menu-item>
+                                    </router-link>
+                                </el-menu-item-group>
+                            </el-submenu>
+                        </el-menu>
+                    </el-col>
+                </el-row>
+            </div>
 
             <div class="main-content">
                 <div class="main-content-inner">
@@ -547,11 +484,8 @@
 </script>
 
 <style>
-    .mySidebar {
-        width: 190px;
-        float: left;
-        position: static;
-        padding-left: 0;
-        padding-right: 0;
+    #mySidebar {
+        background: #FFFFFF;
     }
+
 </style>

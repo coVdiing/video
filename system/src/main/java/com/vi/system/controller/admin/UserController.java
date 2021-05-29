@@ -1,8 +1,8 @@
 package com.vi.system.controller.admin;
 
-import com.vi.server.dto.UserDto;
 import com.vi.server.dto.PageDto;
 import com.vi.server.dto.ResponseDto;
+import com.vi.server.dto.UserDto;
 import com.vi.server.service.UserService;
 import com.vi.server.util.ValidateUtil;
 import io.swagger.annotations.Api;
@@ -54,6 +54,15 @@ public class UserController {
             @ApiParam(value="id",required = true)
             @PathVariable String id) {
         userService.delete(id);
+        return ResponseDto.ok();
+    }
+
+    @ApiOperation("更新密码")
+    @PostMapping("/save-password")
+    public ResponseDto savePassword(
+            @ApiParam(value="用户信息",required = true)
+            @RequestBody UserDto user) {
+        userService.savePassword(user);
         return ResponseDto.ok();
     }
 

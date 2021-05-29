@@ -13,6 +13,8 @@ import com.vi.server.util.CopyUtil;
 import com.vi.server.util.UuidUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -21,6 +23,7 @@ import java.util.List;
 
 @Slf4j
 @Service
+@Transactional
 public class UserService {
     @Resource
     private UserMapper userMapper;
@@ -38,6 +41,9 @@ public class UserService {
     }
 
     public void save(UserDto userDto) {
+        if (userDto == null) {
+            throw new BusinessException(BusinessExceptionEnum.USER_INFO_NULL);
+        }
         User user = CopyUtil.copy(userDto, User.class);
         log.info("user:{}",userDto);
         if (StringUtils.isEmpty(userDto.getId())) {
@@ -55,6 +61,8 @@ public class UserService {
             throw new BusinessException(BusinessExceptionEnum.USER_NAME_REPEAT);
         }
         user.setId(UuidUtil.getShortUuid());
+        // 对密码加密
+        user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
         userMapper.insert(user);
     }
 
@@ -75,5 +83,14 @@ public class UserService {
         } else {
             return users.get(0);
         }
+    }
+
+    public void savePassword(UserDto user) {
+        if (user == null) {
+            throw new BusinessException(BusinessExceptionEnum.USER_INFO_NULL);
+        }
+        // 对密码加密
+        user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
+        userMapper.updateByPrimaryKeySelective(CopyUtil.copy(user,User.class));
     }
 }
