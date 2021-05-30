@@ -1,3 +1,5 @@
+SESSION_KEY_LOGIN_USER = "loginUser";
+
 SessionStorage = {
     get: function (key) {
         let v = sessionStorage.getItem(key);

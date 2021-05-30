@@ -292,8 +292,8 @@
                                 <img class="nav-user-photo" src="../../public/ace/assets/images/avatars/user.jpg"
                                      alt="Jason's Photo"/>
                                 <span class="user-info">
-									<small>Welcome,</small>
-									Jason
+									<small>欢迎,</small>
+									{{loginUser.name}}
 								</span>
 
                                 <i class="ace-icon fa fa-caret-down"></i>
@@ -331,13 +331,16 @@
 
         <div class="main-container ace-save-state" id="main-container">
             <div id="mySidebar" class="sidebar">
-                <el-row class="tac" >
+                <el-row class="tac">
                     <el-col>
                         <el-menu
                                 default-active="2"
                                 class="el-menu-vertical-demo"
                                 @open="handleOpen"
                                 @close="handleClose">
+                            <router-link to="/welcome">
+                                    <el-menu-item index="0-1"><i class="el-icon-setting"></i>欢迎</el-menu-item>
+                            </router-link>
                             <el-submenu index="1">
                                 <template slot="title">
                                     <i class="el-icon-location"></i>
@@ -436,6 +439,12 @@
             $('body').removeClass('login-layout light-login');
             $('body').attr('class', 'no-skin');
             $.getScript('/ace/assets/js/ace.min.js');
+            this.loginUser = Tool.getLoginUser() || {};
+        },
+        data: function () {
+            return {
+                loginUser: {}
+            }
         },
         watch: {
             // 监听路由变化

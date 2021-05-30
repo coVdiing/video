@@ -11,6 +11,7 @@ import com.vi.server.exception.BusinessException;
 import com.vi.server.mapper.UserMapper;
 import com.vi.server.util.CopyUtil;
 import com.vi.server.util.UuidUtil;
+import com.vi.server.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,5 +93,25 @@ public class UserService {
         // 对密码加密
         user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
         userMapper.updateByPrimaryKeySelective(CopyUtil.copy(user,User.class));
+    }
+
+    public UserVo login(UserDto user) {
+        if (user == null) {
+            throw new BusinessException(BusinessExceptionEnum.USER_INFO_NULL);
+        }
+        // 对密码加密
+        user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
+        User userDb = findByLoginName(user.getLoginName());
+        if (userDb == null) {
+            log.warn("用户名不存在:{}",user.getLoginName());
+            throw new BusinessException(BusinessExceptionEnum.USER_LOGIN_ERROR);
+        } else {
+            if (userDb.getPassword().equals(user.getPassword())) {
+                return CopyUtil.copy(userDb, UserVo.class);
+            } else {
+                log.warn("{}-密码错误",user.getLoginName());
+                throw new BusinessException(BusinessExceptionEnum.USER_LOGIN_ERROR);
+            }
+        }
     }
 }

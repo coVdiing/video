@@ -6,11 +6,11 @@
                     <div class="login-container">
                         <div class="center">
                             <h1>
-                                <i class="ace-icon fa fa-leaf green"></i>
-                                <span class="red">Ace</span>
-                                <span class="white" id="id-text2">Application</span>
+                                <span class="red">MengB</span>
+                                <span class="white" id="id-text2">TV</span>
+                                <i class="ace-icon fa fa-leaf white"></i>
                             </h1>
-                            <h4 class="blue" id="id-company-text">&copy; 天外来物</h4>
+                            <!--                            <h4 class="blue" id="id-company-text">vi</h4>-->
                         </div>
 
                         <div class="space-6"></div>
@@ -20,7 +20,7 @@
                                 <div class="widget-body">
                                     <div class="widget-main">
                                         <h4 class="header blue lighter bigger">
-                                            <i class="ace-icon fa fa-coffee green"></i>
+                                            <i class="ace-icon fa fa-coffee"></i>
                                             请输入用户名密码
                                         </h4>
 
@@ -30,7 +30,8 @@
                                             <fieldset>
                                                 <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="text" class="form-control" placeholder="用户名"/>
+															<input type="text" class="form-control"
+                                                                   v-model="user.loginName" placeholder="用户名"/>
 															<i class="ace-icon fa fa-user"></i>
 														</span>
                                                 </label>
@@ -38,6 +39,7 @@
                                                 <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
 															<input type="password" class="form-control"
+                                                                   v-model="user.password"
                                                                    placeholder="密码"/>
 															<i class="ace-icon fa fa-lock"></i>
 														</span>
@@ -83,15 +85,48 @@
     </div><!-- /.main-container -->
 </template>
 <script>
+    import {length, require} from "../../public/static/js/validator";
+    import {alertWarn} from "../../public/static/js/toast";
+
     export default {
         name: 'app',
         mounted() {
             $('body').removeClass('no-skin');
             $('body').attr('class', 'login-layout light-login');
         },
-        methods:{
+        data: function () {
+            return {
+                user: {},
+                loginUser:{}
+            }
+        },
+        methods: {
             login() {
-                this.$router.push("/welcome")
+                let _this = this;
+                // 登录之前先校验信息是否为空
+                if (!require(_this.user.loginName, '登录名')) {
+                    return;
+                }
+                if (!length(_this.user.loginName, '登录名', 1, 50)) {
+                    return;
+                }
+                if (!require(_this.user.password, '密码')) {
+                    return;
+                }
+                _this.user.password = hex_md5(_this.user.password + KEY);
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/system/admin/user/login', {
+                    loginName: _this.user.loginName,
+                    password: _this.user.password
+                }).then((resp) => {
+                    debugger;
+                    if (resp.data.success) {
+                        _this.loginUser = resp.data.content;
+                        Tool.setLoginUser(_this.loginUser);
+                        _this.$router.push("/welcome");
+                    } else {
+                        alertWarn(resp.data.message);
+                    }
+                });
             }
         }
     }

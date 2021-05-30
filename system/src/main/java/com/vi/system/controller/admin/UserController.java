@@ -5,6 +5,7 @@ import com.vi.server.dto.ResponseDto;
 import com.vi.server.dto.UserDto;
 import com.vi.server.service.UserService;
 import com.vi.server.util.ValidateUtil;
+import com.vi.server.vo.UserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -66,4 +67,12 @@ public class UserController {
         return ResponseDto.ok();
     }
 
+    @ApiOperation("登录")
+    @PostMapping("/login")
+    public ResponseDto<UserVo> login(
+            @ApiParam(value="用户信息",required = true)
+            @RequestBody UserDto user) {
+        UserVo userVo = userService.login(user);
+        return ResponseDto.ok().data(userVo);
+    }
 }
