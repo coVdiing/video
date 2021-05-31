@@ -16,8 +16,8 @@
                 <div class="navbar-header pull-left">
                     <a href="index.html" class="navbar-brand">
                         <small>
-                            <i class="fa fa-leaf"></i>
-                            v视频
+                            MengBTV
+                            <i class="el-icon-s-platform"></i>
                         </small>
                     </a>
                 </div>
@@ -277,7 +277,6 @@
                                         </li>
                                     </ul>
                                 </li>
-
                                 <li class="dropdown-footer">
                                     <a href="inbox.html">
                                         See all messages
@@ -286,7 +285,6 @@
                                 </li>
                             </ul>
                         </li>
-
                         <li class="light-blue dropdown-modal">
                             <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                                 <img class="nav-user-photo" src="../../public/ace/assets/images/avatars/user.jpg"
@@ -298,28 +296,25 @@
 
                                 <i class="ace-icon fa fa-caret-down"></i>
                             </a>
-
                             <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                                 <li>
                                     <a href="#">
                                         <i class="ace-icon fa fa-cog"></i>
-                                        Settings
+                                        设置
                                     </a>
                                 </li>
 
                                 <li>
                                     <a href="profile.html">
                                         <i class="ace-icon fa fa-user"></i>
-                                        Profile
+                                        个人信息
                                     </a>
                                 </li>
-
                                 <li class="divider"></li>
-
                                 <li>
-                                    <a href="#">
+                                    <a href="#" @click="logout">
                                         <i class="ace-icon fa fa-power-off"></i>
-                                        Logout
+                                        退出登录
                                     </a>
                                 </li>
                             </ul>
@@ -433,6 +428,8 @@
 
 <script>
 
+    import {alertWarn} from "../../public/static/js/toast";
+
     export default {
         name: 'admin',
         mounted() {
@@ -452,9 +449,6 @@
                 handler: function (val, oldVal) {
                     console.log("---->页面跳转:", val, oldVal);
                     let _this = this;
-                    _this.$nextTick(function () {   // 页面加载完成后执行
-                        _this.activeSidebar(_this.$route.name.replace("/", "-") + "-sidebar");
-                    })
                 }
             }
         },
@@ -462,30 +456,28 @@
             login() {
                 this.$router.push("/admin")
             },
-
-            /**
-             * 菜单激活样式,id是当前点击的菜单的id
-             * @param id
-             */
-            activeSidebar(id) {
-                // 兄弟菜单去掉active样式，自身增加active样式
-                $("#" + id).siblings().removeClass("active");
-                $("#" + id).siblings().find("li").removeClass("active");
-                $("#" + id).addClass("active");
-
-                // 如果有父菜单，父菜单的兄弟菜单去掉open active，父菜单增加open active
-                let parentLi = $("#" + id).parents("li");
-                if (parentLi) {
-                    parentLi.siblings().removeClass("open active");
-                    parentLi.siblings().find("li").removeClass("active");
-                    parentLi.addClass("open active");
-                }
-            },
             handleOpen(key, keyPath) {
                 console.log(key, keyPath);
             },
             handleClose(key, keyPath) {
                 console.log(key, keyPath);
+            },
+            /**
+             * 登出
+             */
+            logout() {
+                let _this = this;
+                Tool.setLoginUser(null);
+                _this.$router.push("/login");
+                let loginToken = SessionStorage.get(SESSION_KEY_LOGIN_TOKEN);
+                _this.$ajax.get(process.env.VUE_APP_SERVER + '/system/admin/user/logout?loginToken='+loginToken);
+                SessionStorage.remove(SESSION_KEY_LOGIN_TOKEN);
+                // _this.$ajax.get('http://127.0.0.1:9000/system/admin/user/logout?loginToken='+loginToken,{
+                //     headers: {
+                //         "Content-Type":"application/json;charset=utf-8"
+                //     },
+                //     withCredentials : true
+                // });
             }
         }
     }

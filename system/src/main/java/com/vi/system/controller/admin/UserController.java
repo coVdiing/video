@@ -1,8 +1,10 @@
 package com.vi.system.controller.admin;
 
+import com.vi.server.customconst.SessionConst;
 import com.vi.server.dto.PageDto;
 import com.vi.server.dto.ResponseDto;
 import com.vi.server.dto.UserDto;
+import com.vi.server.service.SessionService;
 import com.vi.server.service.UserService;
 import com.vi.server.util.ValidateUtil;
 import com.vi.server.vo.UserVo;
@@ -13,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 @Api(tags = "管理")
 @RestController
@@ -24,10 +27,13 @@ public class UserController {
     @Resource
     private UserService userService;
 
+    @Resource
+    private SessionService sessionService;
+
     @ApiOperation("列表")
     @PostMapping("/list")
     public ResponseDto<PageDto> list(
-            @ApiParam(value="分页参数",required = true)
+            @ApiParam(value = "分页参数", required = true)
             @RequestBody PageDto pageDto) {
         userService.list(pageDto);
         ResponseDto data = ResponseDto.ok().data(pageDto);
@@ -37,14 +43,14 @@ public class UserController {
     @ApiOperation("保存")
     @PostMapping("/save")
     public ResponseDto save(
-            @ApiParam(value="",required = true)
+            @ApiParam(value = "", required = true)
             @RequestBody UserDto userDto) {
         // 保存校验
-        ValidateUtil.isEmpty(userDto.getLoginName(),"登录名");
-        ValidateUtil.validateLength(userDto.getLoginName(),"登录名",1,50);
-        ValidateUtil.isEmpty(userDto.getName(),"昵称");
-        ValidateUtil.validateLength(userDto.getName(),"昵称",1,50);
-        ValidateUtil.isEmpty(userDto.getPassword(),"密码");
+        ValidateUtil.isEmpty(userDto.getLoginName(), "登录名");
+        ValidateUtil.validateLength(userDto.getLoginName(), "登录名", 1, 50);
+        ValidateUtil.isEmpty(userDto.getName(), "昵称");
+        ValidateUtil.validateLength(userDto.getName(), "昵称", 1, 50);
+        ValidateUtil.isEmpty(userDto.getPassword(), "密码");
         userService.save(userDto);
         return ResponseDto.ok();
     }
@@ -52,7 +58,7 @@ public class UserController {
     @ApiOperation("删除")
     @DeleteMapping("/delete/{id}")
     public ResponseDto delete(
-            @ApiParam(value="id",required = true)
+            @ApiParam(value = "id", required = true)
             @PathVariable String id) {
         userService.delete(id);
         return ResponseDto.ok();
@@ -61,7 +67,7 @@ public class UserController {
     @ApiOperation("更新密码")
     @PostMapping("/save-password")
     public ResponseDto savePassword(
-            @ApiParam(value="用户信息",required = true)
+            @ApiParam(value = "用户信息", required = true)
             @RequestBody UserDto user) {
         userService.savePassword(user);
         return ResponseDto.ok();
@@ -69,10 +75,22 @@ public class UserController {
 
     @ApiOperation("登录")
     @PostMapping("/login")
-    public ResponseDto<UserVo> login(
-            @ApiParam(value="用户信息",required = true)
-            @RequestBody UserDto user) {
+    public ResponseDto<UserVo> login(@RequestParam String loginToken,
+                                     @ApiParam(value = "用户信息", required = true)
+                                     @RequestBody UserDto user) {
         UserVo userVo = userService.login(user);
+        if (userVo != null) {
+//            sessionService.set(request, SessionConst.LOGIN_USER, userVo);
+            sessionService.set(loginToken,userVo);
+        }
         return ResponseDto.ok().data(userVo);
+    }
+
+    @ApiOperation("登出")
+    @GetMapping("/logout")
+    public ResponseDto logout(@RequestParam String loginToken) {
+//        sessionService.remove(request, SessionConst.LOGIN_USER);
+        sessionService.remove(loginToken);
+        return ResponseDto.ok();
     }
 }

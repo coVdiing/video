@@ -213,7 +213,6 @@
         },
         mounted() {
             let _this = this;
-            _this.$parent.activeSidebar("business-category-sidebar");
             _this.all();
         },
         methods: {

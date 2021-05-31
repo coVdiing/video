@@ -154,7 +154,6 @@
         mounted() {
             let _this = this;
             _this.$refs.pagination.size = 5;
-            _this.$parent.activeSidebar("business-teacher-sidebar");
             _this.list(1);
         },
         methods: {

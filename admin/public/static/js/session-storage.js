@@ -1,4 +1,5 @@
 SESSION_KEY_LOGIN_USER = "loginUser";
+SESSION_KEY_LOGIN_TOKEN = "loginToken"; // 服务器用来识别当前登录用户的token
 
 SessionStorage = {
     get: function (key) {

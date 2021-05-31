@@ -59,7 +59,6 @@
         mounted() {
             let _this = this;
             _this.$refs.pagination.size = 5;
-            _this.$parent.activeSidebar("business-customFile-sidebar");
             _this.list();
         },
         methods: {

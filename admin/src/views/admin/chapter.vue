@@ -163,7 +163,6 @@
         mounted() {
             let _this = this;
             _this.$refs.pagination.size = 5;
-            _this.$parent.activeSidebar("business-course-sidebar");
             _this.course = SessionStorage.get("course") || {}
             if (Tool.isEmpty(course)) {
                 _this.$router.push("/welcome");

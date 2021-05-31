@@ -292,7 +292,6 @@
         mounted() {
             let _this = this;
             _this.$refs.pagination.size = 5;
-            _this.$parent.activeSidebar("business-course-sidebar");
             _this.list();
             // 富文本编辑器加载
             _this.editor = new E('#editor-body');
@@ -449,7 +448,6 @@
                 let _this = this;
                 let keys = [];
                 _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course-category/get-selected-categories/' + courseId).then((response) => {
-                        console.log("查询结果:" + response);
                         _this.selectedCategories = response.data.content;
                         console.log("getselect-keys:" + _this.selectedCategories);
                     }

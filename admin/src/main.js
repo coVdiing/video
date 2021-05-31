@@ -7,6 +7,8 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
 Vue.config.productionTip = false
+// 解决每次ajax请求，对应的sessionId不一致的问题
+axios.defaults.withCredentials = true;
 Vue.prototype.$ajax=axios
 
 Vue.filter('formatSecond', formatSecond)
