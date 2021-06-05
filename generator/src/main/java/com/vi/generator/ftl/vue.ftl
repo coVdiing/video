@@ -135,7 +135,6 @@
         mounted() {
             let _this = this;
             _this.$refs.pagination.size = 5;
-            _this.$parent.activeSidebar("${module}-${domain}-sidebar");
             _this.list();
         },
         methods: {

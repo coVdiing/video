@@ -33,9 +33,9 @@ public class ValidateUtil {
         }
     }
 
-    public static void main(String[] args) {
-        String arg = "12";
-//        isEmpty(arg,"用户名");
-        validateLength(arg,"用户名",3,12);
-    }
+//    public static void main(String[] args) {
+//        String arg = "12";
+////        isEmpty(arg,"用户名");
+//        validateLength(arg,"用户名",3,12);
+//    }
 }

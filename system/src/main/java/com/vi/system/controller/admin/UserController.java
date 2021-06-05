@@ -1,34 +1,30 @@
 package com.vi.system.controller.admin;
 
-import com.vi.server.customconst.SessionConst;
 import com.vi.server.dto.PageDto;
 import com.vi.server.dto.ResponseDto;
 import com.vi.server.dto.UserDto;
-import com.vi.server.service.SessionService;
-import com.vi.server.service.UserService;
+import com.vi.server.enums.BusinessExceptionEnum;
 import com.vi.server.util.ValidateUtil;
 import com.vi.server.vo.UserVo;
+import com.vi.server.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 @Api(tags = "管理")
 @RestController
 @RequestMapping("/admin/user")
 @Slf4j
 public class UserController {
-    public static final String BUSINESS_NAME = "";
+    public static final String BUSINESS_NAME = "后台用户管理";
 
     @Resource
     private UserService userService;
-
-    @Resource
-    private SessionService sessionService;
 
     @ApiOperation("列表")
     @PostMapping("/list")
@@ -75,22 +71,21 @@ public class UserController {
 
     @ApiOperation("登录")
     @PostMapping("/login")
-    public ResponseDto<UserVo> login(@RequestParam String loginToken,
-                                     @ApiParam(value = "用户信息", required = true)
+    public ResponseDto<UserVo> login(@ApiParam(value = "用户信息", required = true)
                                      @RequestBody UserDto user) {
         UserVo userVo = userService.login(user);
         if (userVo != null) {
-//            sessionService.set(request, SessionConst.LOGIN_USER, userVo);
-            sessionService.set(loginToken,userVo);
+
+            return ResponseDto.ok().data(userVo);
+        } else {
+            return ResponseDto.error().message(BusinessExceptionEnum.USER_LOGIN_ERROR.getDesc());
         }
-        return ResponseDto.ok().data(userVo);
     }
 
     @ApiOperation("登出")
     @GetMapping("/logout")
     public ResponseDto logout(@RequestParam String loginToken) {
-//        sessionService.remove(request, SessionConst.LOGIN_USER);
-        sessionService.remove(loginToken);
+        userService.logout(loginToken);
         return ResponseDto.ok();
     }
 }

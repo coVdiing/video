@@ -36,6 +36,7 @@
         <mysql.version>5.1.37</mysql.version>
         <dom4j.version>2.1.1</dom4j.version>
         <thumbnailator.version>[0.4, 0.5)</thumbnailator.version>
+        <com.vi.server.version>0.0.3-SNAPSHOT</com.vi.server.version>
     </properties>
 
     <dependencyManagement>
@@ -63,15 +64,9 @@
             </dependency>
 
             <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>5.1.37</version>
-            </dependency>
-
-            <dependency>
                 <groupId>com.vi</groupId>
                 <artifactId>server</artifactId>
-                <version>0.0.2-SNAPSHOT</version>
+                <version>${com.vi.server.version}</version>
             </dependency>
 
             <!-- 分页插件 -->
@@ -144,6 +139,12 @@
                 <version>${thumbnailator.version}</version>
             </dependency>
 
+            <!-- redis -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

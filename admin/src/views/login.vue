@@ -95,8 +95,7 @@
                     return;
                 }
                 _this.user.password = hex_md5(_this.user.password + KEY);
-                let loginToken = Tool.uuid(8,10);
-                _this.$ajax.post(process.env.VUE_APP_SERVER + '/system/admin/user/login?loginToken='+loginToken, {
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/system/admin/user/login', {
                     loginName: _this.user.loginName,
                     password: _this.user.password
                 }).
@@ -105,6 +104,7 @@
                         _this.loginUser = resp.data.content;
                         Tool.setLoginUser(_this.loginUser);
                         // 生成用户token
+                        let loginToken = resp.data.content.loginToken;
                         SessionStorage.set(SESSION_KEY_LOGIN_TOKEN, loginToken);
                         _this.$router.push("/welcome");
                     } else {

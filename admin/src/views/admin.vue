@@ -472,12 +472,6 @@
                 let loginToken = SessionStorage.get(SESSION_KEY_LOGIN_TOKEN);
                 _this.$ajax.get(process.env.VUE_APP_SERVER + '/system/admin/user/logout?loginToken='+loginToken);
                 SessionStorage.remove(SESSION_KEY_LOGIN_TOKEN);
-                // _this.$ajax.get('http://127.0.0.1:9000/system/admin/user/logout?loginToken='+loginToken,{
-                //     headers: {
-                //         "Content-Type":"application/json;charset=utf-8"
-                //     },
-                //     withCredentials : true
-                // });
             }
         }
     }

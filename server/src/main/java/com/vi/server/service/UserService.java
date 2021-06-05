@@ -1,5 +1,6 @@
 package com.vi.server.service;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.vi.server.domain.User;
@@ -10,6 +11,7 @@ import com.vi.server.enums.BusinessExceptionEnum;
 import com.vi.server.exception.BusinessException;
 import com.vi.server.mapper.UserMapper;
 import com.vi.server.util.CopyUtil;
+import com.vi.server.util.TokenUtil;
 import com.vi.server.util.UuidUtil;
 import com.vi.server.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -28,6 +31,9 @@ import java.util.List;
 public class UserService {
     @Resource
     private UserMapper userMapper;
+
+    @Resource
+    private SessionService sessionService;
 
     public void list(PageDto pageDto) {
         PageHelper.startPage(pageDto.getPage(), pageDto.getPageSize());
@@ -46,7 +52,7 @@ public class UserService {
             throw new BusinessException(BusinessExceptionEnum.USER_INFO_NULL);
         }
         User user = CopyUtil.copy(userDto, User.class);
-        log.info("user:{}",userDto);
+        log.info("user:{}", userDto);
         if (StringUtils.isEmpty(userDto.getId())) {
             insert(user);
         } else {
@@ -92,7 +98,7 @@ public class UserService {
         }
         // 对密码加密
         user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
-        userMapper.updateByPrimaryKeySelective(CopyUtil.copy(user,User.class));
+        userMapper.updateByPrimaryKeySelective(CopyUtil.copy(user, User.class));
     }
 
     public UserVo login(UserDto user) {
@@ -103,15 +109,24 @@ public class UserService {
         user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
         User userDb = findByLoginName(user.getLoginName());
         if (userDb == null) {
-            log.warn("用户名不存在:{}",user.getLoginName());
+            log.warn("用户名不存在:{}", user.getLoginName());
             throw new BusinessException(BusinessExceptionEnum.USER_LOGIN_ERROR);
         } else {
             if (userDb.getPassword().equals(user.getPassword())) {
-                return CopyUtil.copy(userDb, UserVo.class);
+                UserVo userVo = CopyUtil.copy(userDb, UserVo.class);
+                String loginToken = TokenUtil.getLoginToken();
+                // 设置登录有效期为30分钟
+                sessionService.set(loginToken, JSON.toJSONString(userVo), 30, TimeUnit.MINUTES);
+                userVo.setLoginToken(loginToken);
+                return userVo;
             } else {
-                log.warn("{}-密码错误",user.getLoginName());
+                log.warn("{}-密码错误", user.getLoginName());
                 throw new BusinessException(BusinessExceptionEnum.USER_LOGIN_ERROR);
             }
         }
+    }
+
+    public void logout(String loginToken) {
+        sessionService.remove(loginToken);
     }
 }
