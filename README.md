@@ -137,4 +137,5 @@ list() {
 
 ### 06/05
 1.前端增加未登录拦截跳转  
-2.请求头中增加loginToken
+2.请求头中增加loginToken  
+3.引入redis，用于处理token，替换内存中的map  
