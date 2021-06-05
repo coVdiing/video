@@ -1,6 +1,5 @@
 Loading = {
     show: function () {
-        console.log("出现被调用");
         $.blockUI({
             message: '<img src="/static/image/loading.gif"/>',
             css: {
@@ -12,7 +11,6 @@ Loading = {
         })
     },
     hide: function () {
-        console.log("隐藏被调用");
         setTimeout(function () {
             $.unblockUI();
         },100);

@@ -14,6 +14,19 @@ Vue.prototype.$ajax=axios
 Vue.filter('formatSecond', formatSecond)
 Vue.use(ElementUI);
 
+/**
+ * axios拦截器
+ */
+axios.interceptors.request.use(function (config) {
+  console.log("请求：", config);
+  let token = Tool.getLoginUser().loginToken;
+  if (Tool.isNotEmpty(token)) {
+    config.headers.loginToken = token;
+    console.log("请求headers增加token:", token);
+  }
+  return config;
+}, error => {});
+
 // 路由登录拦截
 router.beforeEach((to, from, next) => {
   // 要不要对meta.LoginRequire属性做监控拦截

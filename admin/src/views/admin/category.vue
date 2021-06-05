@@ -275,7 +275,6 @@
                 Loading.show();
                 _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/category/all').then((response) => {
                         Loading.hide();
-                        console.log('data:' + response.data.content)
                         _this.categorys = response.data.content;
                     }
                 )
