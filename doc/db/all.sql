@@ -178,6 +178,17 @@ create table `user`(
 
 insert into `user` (id,login_name,name,password) values('10000000','test','测试','202cb962ac59075b964b07152d234b70');
 
+-- 资源表
+drop table if exists resource;
+create table `resource`(
+    `id` char(6) not null default '' comment 'id',
+    `name` varchar(100) not null comment '名称|菜单或按钮',
+    `page` varchar(50) null comment '页面|路由',
+    `request` varchar(200) null comment '请求|接口',
+    `parent` char(6) comment '父id',
+    primary key(`id`)
+)engine=innodb default charset=utf8mb4 comment='资源';
+
 ----------------测试
 
 drop table if exists `test`;
