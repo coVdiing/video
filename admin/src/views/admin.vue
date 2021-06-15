@@ -334,7 +334,7 @@
                                 @open="handleOpen"
                                 @close="handleClose">
                             <router-link to="/welcome">
-                                    <el-menu-item index="0-1"><i class="el-icon-setting"></i>欢迎</el-menu-item>
+                                <el-menu-item index="0-1"><i class="el-icon-setting"></i>欢迎</el-menu-item>
                             </router-link>
                             <el-submenu index="1">
                                 <template slot="title">
@@ -346,7 +346,9 @@
                                     <router-link to="/system/user">
                                         <el-menu-item index="1-1">用户管理</el-menu-item>
                                     </router-link>
-                                    <el-menu-item index="1-2">权限管理</el-menu-item>
+                                    <router-link to="/system/resource">
+                                        <el-menu-item index="1-2">资源管理</el-menu-item>
+                                    </router-link>
                                 </el-menu-item-group>
                             </el-submenu>
                             <el-submenu index="2">
@@ -470,7 +472,7 @@
                 Tool.setLoginUser(null);
                 _this.$router.push("/login");
                 let loginToken = SessionStorage.get(SESSION_KEY_LOGIN_TOKEN);
-                _this.$ajax.get(process.env.VUE_APP_SERVER + '/system/admin/user/logout?loginToken='+loginToken);
+                _this.$ajax.get(process.env.VUE_APP_SERVER + '/system/admin/user/logout?loginToken=' + loginToken);
                 SessionStorage.remove(SESSION_KEY_LOGIN_TOKEN);
             }
         }

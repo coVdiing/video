@@ -11,6 +11,7 @@ import Test from "./views/admin/test"
 import Teacher from "./views/admin/teacher"
 import CustomFile from "./views/admin/customFile"
 import User from "./views/admin/user"
+import Resource from "./views/admin/resource"
 
 Vue.use(Router);
 
@@ -66,6 +67,10 @@ export default new Router({
             path: "system/user",
             name:"system/user",
             component: User
+        },{
+            path: "system/resource",
+            name:"system/resource",
+            component: Resource
         }]
     }]
 })
