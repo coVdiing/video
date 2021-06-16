@@ -1,20 +1,40 @@
 <template>
     <div>
-        <p>
-            <button v-on:click="add()" class="btn btn-white btn-default btn-round">
-                <i class="ace-icon fa fa-edit green"></i>
-                新增
-            </button>
-            &nbsp;
-            <!-- PAGE CONTENT BEGINS -->
-            <button v-on:click="list()" class="btn btn-white btn-default btn-round">
-                <i class="ace-icon fa fa-times red2"></i>
-                刷新
-            </button>
-        </p>
-        <div class="alert alert-warning" id="warn" role="alert" hidden="hidden">
-            A simple warning alert—check it out!
-        </div>
+        <el-row>
+            <el-col :span="12">
+                <div class="grid-content bg-purple">
+                    <p>
+                        <button v-on:click="add()" class="btn btn-white btn-default btn-round">
+                            <i class="ace-icon fa fa-edit green"></i>
+                            保存资源
+                        </button>
+                        &nbsp;
+                        <!-- PAGE CONTENT BEGINS -->
+                        <button v-on:click="list()" class="btn btn-white btn-default btn-round">
+                            <i class="ace-icon fa fa-times red2"></i>
+                            获取资源JSON
+                        </button>
+                    </p>
+                    <p>
+                        <el-input
+                                type="textarea"
+                                :autosize="{ minRows: 2, maxRows: 4}"
+                                placeholder="请输入内容"
+                                v-model="resourceJson">
+                        </el-input>
+                    </p>
+                </div>
+            </el-col>
+            <el-col :span="12">
+                <div class="grid-content bg-purple-light">
+                    <div>
+                        <el-tree :data="resourceTree" :props="defaultProps"></el-tree>
+                    </div>
+                </div>
+            </el-col>
+        </el-row>
+
+
         <table id="simple-table" class="table  table-bordered table-hover">
             <thead>
             <tr>
@@ -161,7 +181,37 @@
         data: function () {
             return {
                 resources: [],
-                resource: {}
+                resource: {},
+                resourceJson: "",
+                resourceTree: [{
+                    label: '系统管理',
+                    children: [{
+                        label: '用户管理',
+                        children: [{
+                            label: '保存'
+                        }, {
+                            label: '删除'
+                        }, {
+                            label: '重置密码'
+                        }]
+                    }, {
+                        label: '资源管理',
+                        children: [{
+                            label: '保存/显示',
+                            children: []
+                        }]
+                    }, {
+                        label: '角色管理',
+                        children: [{
+                            label: '角色/权限管理',
+                            children: []
+                        }]
+                    }]
+                }],
+                defaultProps: {
+                    children: 'children',
+                    label: 'label'
+                }
             }
         },
         mounted() {
