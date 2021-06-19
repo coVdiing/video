@@ -1,6 +1,9 @@
 package com.vi.server.dto;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ResourceDto {
 
     /**
@@ -27,6 +30,11 @@ public class ResourceDto {
      * 父id
      */
     private String parent;
+
+    /**
+     * 子节点
+     */
+    private List<ResourceDto> children = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -68,6 +76,13 @@ public class ResourceDto {
         this.parent = parent;
     }
 
+    public List<ResourceDto> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<ResourceDto> children) {
+        this.children = children;
+    }
 
     @Override
     public String toString() {

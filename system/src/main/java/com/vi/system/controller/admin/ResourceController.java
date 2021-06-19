@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Api(tags = "资源管理")
 @RestController
@@ -57,4 +58,19 @@ public class ResourceController {
         return ResponseDto.ok();
     }
 
+    @ApiOperation("资源树")
+    @GetMapping("/resource-tree")
+    public ResponseDto<List<ResourceDto>> resourceTree() {
+        List<ResourceDto> all = resourceService.findAll();
+        // 把集合转成一个根节点
+        List<ResourceDto> rootDto = resourceService.list2Root(all);
+        return ResponseDto.ok().data(rootDto);
+    }
+
+    @ApiOperation("保存资源树")
+    @PostMapping("/save-tree")
+    public ResponseDto saveTree(@RequestBody ResourceDto resourceDto) {
+        resourceService.saveTree(resourceDto);
+        return ResponseDto.ok();
+    }
 }
