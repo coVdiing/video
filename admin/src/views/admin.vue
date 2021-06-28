@@ -349,6 +349,9 @@
                                     <router-link to="/system/resource">
                                         <el-menu-item index="1-2">资源管理</el-menu-item>
                                     </router-link>
+                                    <router-link to="/system/role">
+                                        <el-menu-item index="1-3">角色管理</el-menu-item>
+                                    </router-link>
                                 </el-menu-item-group>
                             </el-submenu>
                             <el-submenu index="2">
